@@ -1,4 +1,5 @@
 import { User } from '../models/User.js';
+import { Location } from '../models/Location.js';
 import bcrypt from 'bcrypt';
 import { schema } from '../dataValidation/joi.js';
 
@@ -47,5 +48,9 @@ export const authController = {
     } catch (err) {
       console.log(err);
     }
+  },
+  async test(req, res) {
+    const test = await User.findOne({ include: Location });
+    res.status(200).json(test);
   },
 };
