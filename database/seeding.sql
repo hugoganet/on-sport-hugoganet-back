@@ -10,8 +10,11 @@ INSERT INTO location("department","city") VALUES('Hauts-de-France','Roubaix');
 INSERT INTO location("department","city") VALUES('Landes','Hossejor');
 __
 
-INSERT INTO user("firstname","lastname","login","password","email")
+INSERT INTO "user"("firstname","lastname","login","password","email")
 VALUES('John','Doe','johndoe','test','john.doe@gmail.com');
+
+INSERT INTO "user"("firstname","lastname","login","password","email")
+VALUES('bobi','Doe','bobiDoe','test','bobi.doe@gmail.com');
 __
 
 INSERT INTO activity("title","sport_id","user_id")VALUES('Parcours 5C',1,1);
