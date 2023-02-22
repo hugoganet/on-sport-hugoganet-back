@@ -1,10 +1,17 @@
 import express from 'express';
+import 'dotenv/config';
 const app = express();
 import { router } from './app/routers/index.js';
 import { sequelize } from './app/dataSource/onSportSource.js';
 
-app.use(express.urlencoded({ extended: false }));
+const port = process.env.PORT || 3000;
 
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+app.use(router);
+
+// Connexion Sequelize
 sequelize
   .authenticate()
   .then(() => {
@@ -13,11 +20,6 @@ sequelize
   .catch((err) => {
     console.error('Error during Data Source initialization', err);
   });
-
-app.use(express.json());
-app.use(router);
-
-const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`server Express started on port : ${port}`);

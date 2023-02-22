@@ -44,13 +44,29 @@ export const authController = {
       //   text: `Bonjour, ${firstname} votre inscription est bien validée, rendez-vous sur http://localhost:${process.env.PORT}/signin`,
       //   html: `<p>Bonjour,<b>${firstname}</b>  votre inscription est bien validée, rendez-vous sur http://localhost:${process.env.PORT}/signin</p>`,
       // });
-      res.status(200).json('test signup ok');
+      res.status(200).send();
     } catch (err) {
       console.log(err);
     }
   },
-  async test(req, res) {
-    const test = await User.findOne({ include: Location });
-    res.status(200).json(test);
+  async signin(req, res) {
+    const { login, password } = req.body;
+    const currentUser = await User.findOne({ where: { login } });
+
+    try {
+      const decryptPassword = await bcrypt.compare(
+        password,
+        currentUser.password,
+      );
+
+      // vérification correspondance login et mdp input et base
+      if (currentUser.login !== login || decryptPassword == false) {
+        return res.status(401).json('not authorized');
+      }
+      res.status(200).json('connexion valid');
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
   },
 };
