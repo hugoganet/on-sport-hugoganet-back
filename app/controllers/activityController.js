@@ -44,6 +44,25 @@ const activityController = {
       console.log(err);
     }
   },
+  async createActivity(req, res) {
+    try {
+      await Activity.create({
+        title: req.body.title,
+        note: req.body.note,
+        description: req.body.description,
+        family_tag: req.body.family_tag,
+        sport_id: req.body.sport_id,
+        user_id: req.body.user_id,
+        location_id: req.body.location_id,
+      }).then((result) => {
+        res.status(201).json({
+          message: 'Activity successful created',
+        });
+      });
+    } catch (err) {
+      res.status(404).json({ message: err });
+    }
+  },
 };
 
 export { activityController };
