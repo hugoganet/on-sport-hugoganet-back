@@ -1,12 +1,16 @@
 import express from 'express';
-export const mainRouter = express.Router();
+const mainRouter = express.Router();
 
-import { mainController } from '../controllers/mainController.js';
-import { controlSyntaxMiddleware } from '../middlewares/controlSyntaxMiddleware.js';
+mainRouter
+  .route('/')
+  .get((req, res, next) => {
+    res.send('GET request called');
+  })
+  .post((req, res, next) => {
+    res.send('POST request called');
+  })
+  .all((req, res, next) => {
+    res.send('Other requests called');
+  });
 
-mainRouter.get(
-  '/activity/sport/:name',
-  controlSyntaxMiddleware.syntaxTypeControl,
-  mainController.getActivitiesBySport,
-);
-mainRouter.get('/activity', mainController.getAllActivities);
+export { mainRouter };

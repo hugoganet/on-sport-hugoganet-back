@@ -5,7 +5,7 @@ import { schema } from '../dataValidation/joi.js';
 
 const saltRounds = 10;
 
-export const authController = {
+const authController = {
   async signup(req, res) {
     const { firstname, lastname, email, login, password } = req.body;
 
@@ -70,3 +70,5 @@ export const authController = {
     }
   },
 };
+
+export { authController };

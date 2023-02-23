@@ -1,7 +1,7 @@
 import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
 
-export const mainController = {
+const activityController = {
   /**
    * Récupérer la liste complète des activités.
    * @param {*} _req Non requis
@@ -22,9 +22,11 @@ export const mainController = {
    * @param {*} res
    */
   async getActivitiesBySport(req, res) {
+    console.log('test');
     const sportRequest = req.params.name.toLowerCase();
+    console.log(typeof sportRequest);
     const idSport = await Sport.findOne({ where: { name: sportRequest } });
-
+    console.log(idSport);
     try {
       const listActivities = await Activity.findAll({
         where: { sport_id: idSport.id },
@@ -35,3 +37,5 @@ export const mainController = {
     }
   },
 };
+
+export { activityController };
