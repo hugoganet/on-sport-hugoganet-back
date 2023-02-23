@@ -92,6 +92,22 @@ const activityController = {
       res.status(404).json({ message: error });
     }
   },
+  async deleteActivityByID(req, res) {
+    try {
+      await Activity.findAll({ where: { id: req.params.id } }).then(
+        async (result) => {
+          if (result.length > 0) {
+            await Activity.destroy({ where: { id: req.params.id } }),
+              res.status(200).json({ message: 'delete activity successfully' });
+          } else {
+            res.status(404).json({ message: 'id activity not found' });
+          }
+        },
+      );
+    } catch (error) {
+      res.status(404).json({ message: error });
+    }
+  },
 };
 
 export { activityController };

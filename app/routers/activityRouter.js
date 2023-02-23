@@ -7,6 +7,7 @@ import { controlSyntaxMiddleware } from '../middlewares/controlSyntaxMiddleware.
 activityRouter.get('/', activityController.getAllActivities);
 activityRouter.post('/', activityController.createActivity);
 activityRouter.put('/:id', activityController.updateActivityByID);
+activityRouter.delete('/:id', activityController.deleteActivityByID);
 
 activityRouter.get(
   '/sport/:name',
