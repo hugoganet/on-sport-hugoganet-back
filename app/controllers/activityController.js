@@ -16,17 +16,25 @@ const activityController = {
       res.status(500).json(err);
     }
   },
+  async getActivityByID(req, res) {
+    const activityRequest = req.params.id;
+    try {
+      const activity = await Activity.findOne({
+        where: { id: activityRequest },
+      });
+      res.json(activity);
+    } catch (err) {
+      console.log(err);
+    }
+  },
   /**
    * Récupération de la liste des activités par sport.
    * @param {*} req
    * @param {*} res
    */
   async getActivitiesBySport(req, res) {
-    console.log('test');
     const sportRequest = req.params.name.toLowerCase();
-    console.log(typeof sportRequest);
     const idSport = await Sport.findOne({ where: { name: sportRequest } });
-    console.log(idSport);
     try {
       const listActivities = await Activity.findAll({
         where: { sport_id: idSport.id },
