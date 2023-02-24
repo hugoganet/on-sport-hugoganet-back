@@ -64,7 +64,7 @@ const authController = {
         return res.status(401).json('not authorized');
       }
       const tokenUser = await tokenController.genToken({ login });
-      res.status(200).json(tokenUser);
+      res.status(200).json({ tokenUser, login });
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
