@@ -16,17 +16,25 @@ const activityController = {
       res.status(500).json(err);
     }
   },
+  async getActivityByID(req, res) {
+    const activityRequest = req.params.id;
+    try {
+      const activity = await Activity.findOne({
+        where: { id: activityRequest },
+      });
+      res.json(activity);
+    } catch (err) {
+      console.log(err);
+    }
+  },
   /**
    * Récupération de la liste des activités par sport.
    * @param {*} req
    * @param {*} res
    */
   async getActivitiesBySport(req, res) {
-    console.log('test');
     const sportRequest = req.params.name.toLowerCase();
-    console.log(typeof sportRequest);
     const idSport = await Sport.findOne({ where: { name: sportRequest } });
-    console.log(idSport);
     try {
       const listActivities = await Activity.findAll({
         where: { sport_id: idSport.id },
@@ -34,6 +42,70 @@ const activityController = {
       res.json(listActivities);
     } catch (err) {
       console.log(err);
+    }
+  },
+  async createActivity(req, res) {
+    try {
+      await Activity.create({
+        title: req.body.title,
+        note: req.body.note,
+        description: req.body.description,
+        family_tag: req.body.family_tag,
+        sport_id: req.body.sport_id,
+        user_id: req.body.user_id,
+        location_id: req.body.location_id,
+      }).then((result) => {
+        res.status(201).json({
+          message: 'Activity successful created',
+        });
+      });
+    } catch (err) {
+      res.status(404).json({ message: err });
+    }
+  },
+  async updateActivityByID(req, res) {
+    try {
+      await Activity.findAll({ where: { id: req.params.id } }).then(
+        async (result) => {
+          if (result.length > 0) {
+            await Activity.update(
+              {
+                title: req.body.title,
+                note: req.body.note,
+                description: req.body.description,
+                family_tag: req.body.family_tag,
+                sport_id: req.body.sport_id,
+                user_id: req.body.user_id,
+                location_id: req.body.location_id,
+              },
+              { where: { id: req.params.id } },
+            );
+            res.status(200).json({
+              message: 'update successful',
+            });
+          } else {
+            res.status(500).json({ message: 'update failed' });
+          }
+        },
+      );
+    } catch (error) {
+      res.status(404).json({ message: error });
+    }
+  },
+  async deleteActivityByID(req, res) {
+    try {
+      await Activity.findAll({ where: { id: req.params.id } }).then(
+        async (result) => {
+          if (result.length > 0) {
+            await Activity.destroy({ where: { id: req.params.id } }),
+              res.status(200).json({ message: 'delete activity successfully' });
+          } else {
+            res.status(404).json({ message: 'id activity not found' });
+          }
+        },
+      );
+    } catch (error) {
+      res.status(404).json({ message: error });
     }
   },
 };
