@@ -6,6 +6,7 @@ import { controlSyntaxMiddleware } from '../middlewares/controlSyntaxMiddleware.
 import { controlUnique } from '../middlewares/controlData.js';
 
 activityRouter.get('/', activityController.getAllActivities);
+activityRouter.get('/:id', activityController.getActivityByID);
 activityRouter.post(
   '/',
   controlUnique.uniqueActivity,
