@@ -99,7 +99,7 @@ CREATE TABLE "comment"
     CONSTRAINT "activity_id" FOREIGN KEY (activity_id)
         REFERENCES "activity" (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
         NOT VALID
 );
 
