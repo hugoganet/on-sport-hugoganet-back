@@ -13,15 +13,15 @@ Activity.init(
     },
     note: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     description: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     family_tag: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
+      allowNull: true,
     },
     sport_id: {
       type: DataTypes.INTEGER,
@@ -33,7 +33,7 @@ Activity.init(
     },
     location_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {
