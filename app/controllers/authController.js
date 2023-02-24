@@ -2,7 +2,7 @@ import { User } from '../models/User.js';
 import { Location } from '../models/Location.js';
 import bcrypt from 'bcrypt';
 import { schema } from '../dataValidation/joi.js';
-
+import { tokenController } from './token.js';
 const saltRounds = 10;
 
 const authController = {
@@ -63,7 +63,8 @@ const authController = {
       if (currentUser.login !== login || decryptPassword == false) {
         return res.status(401).json('not authorized');
       }
-      res.status(200).json('connexion valid');
+      const tokenUser = await tokenController.genToken({ login });
+      res.status(200).json(tokenUser);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
