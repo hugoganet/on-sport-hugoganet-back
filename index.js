@@ -7,12 +7,15 @@ import cors from 'cors';
 const port = process.env.PORT || 3000;
 //
 import multer from 'multer';
-const upload = multer();
+// const upload = multer();
 //
-app.use(express.urlencoded({ extended: false }));
+//
+
+//
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // for parsing multipart/form-data
-app.use(upload.array());
+// app.use(upload.single());
 // Connexion Sequelize
 sequelize
   .authenticate()
