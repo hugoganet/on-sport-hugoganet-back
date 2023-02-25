@@ -1,33 +1,33 @@
 INSERT INTO "sport"("name","icon")
 VALUES
-('Athlétisme', 'Athlétisme'),
-('Natation', 'Natation'),
-('Tennis', 'Tennis'),
-('Gymnastique', 'Gymnastique'),
-('Ski alpin', 'Ski alpin'),
-('Escalade', 'Escalade'),
-('Golf', 'Golf'),
-('Boxe', 'Boxe'),
-('Judo', 'Judo'),
-('Cyclisme', 'Cyclisme'),
-('Sport de glisse - MER','glisse_mer');
+('athlétisme', 'athlétisme'),
+('natation', 'natation'),
+('tennis', 'tennis'),
+('gymnastique', 'gymnastique'),
+('ski alpin', 'ski alpin'),
+('escalade', 'escalade'),
+('golf', 'golf'),
+('boxe', 'boxe'),
+('judo', 'judo'),
+('cyclisme', 'cyclisme'),
+('sport de glisse - mer','glisse_mer');
 
 INSERT INTO "location"("department","city")
 VALUES
-('Seine et Marne','Fontainebleau'),
-('Rhône Alpes','Lyon'),
-('Hauts-de-France','Roubaix'),
-('Landes','Hossegor'),
-('Loire-Atlantique', 'Nantes'),
-('Haute-Garonne', 'Toulouse'),
-('Ille-et-Vilaine', 'Rennes'),
-('Bas-Rhin', 'Strasbourg'),
-('Vaucluse', 'Avignon'),
-('Hérault', 'Montpellier'),
-('Isère', 'Grenoble'),
-('Pyrénées-Atlantiques', 'Pau'),
-('Calvados', 'Caen'),
-('Var', 'Toulon');
+('seine et marne','fontainebleau'),
+('rhône alpes','lyon'),
+('hauts-de-france','roubaix'),
+('landes','hossegor'),
+('loire-atlantique', 'nantes'),
+('haute-garonne', 'toulouse'),
+('ille-et-vilaine', 'rennes'),
+('bas-rhin', 'strasbourg'),
+('vaucluse', 'avignon'),
+('hérault', 'montpellier'),
+('isère', 'grenoble'),
+('pyrénées-atlantiques', 'pau'),
+('calvados', 'caen'),
+('var', 'toulon');
 
 INSERT INTO "user"("firstname","lastname","login","password","email")
 VALUES
@@ -54,15 +54,15 @@ VALUES
 ('Natation en eau libre', 2, 6),
 ('Cours de tennis privé', 3, 1);
 
-INSERT INTO "comment"("content","user_id","activity_id")
+INSERT INTO "comment"("content","activity_note","user_id","activity_id")
 VALUES
-('Super séance, jai senti mes muscles travailler!', 4, 2),
-('Très bon entraînement, jai réussi à améliorer mes performances!', 8, 5),
-('Jai adoré faire de la randonnée, la vue était magnifique!', 3, 7),
-('Entraînement intense mais ça en vaut la peine pour les résultats!', 1, 6),
-('Natation rafraîchissante dans la piscine, jadore!', 5, 3),
-('Belle journée pour faire du vélo de montagne, jai adoré!', 6, 8),
-('Jai aimé les mouvements de gymnastique, ils sont tellement gracieux!', 9, 4),
-('Entraînement de boxe stimulant, je suis prêt pour mon prochain combat!', 2, 1),
-('Jadore le tennis, cest mon sport préféré!', 7, 10),
-('Le cours de yoga était très relaxant, je me sens bien reposé!', 4, 9);
+('Super séance, jai senti mes muscles travailler!', 1, 4, 2),
+('Très bon entraînement, jai réussi à améliorer mes performances!', 2, 8, 5),
+('Jai adoré faire de la randonnée, la vue était magnifique!', 3, 3, 7),
+('Entraînement intense mais ça en vaut la peine pour les résultats!', 3, 1, 6),
+('Natation rafraîchissante dans la piscine, jadore!', 2, 5, 3),
+('Belle journée pour faire du vélo de montagne, jai adoré!', 1, 6, 8),
+('Jai aimé les mouvements de gymnastique, ils sont tellement gracieux!', 3, 9, 4),
+('Entraînement de boxe stimulant, je suis prêt pour mon prochain combat!', 1, 2, 1),
+('Jadore le tennis, cest mon sport préféré!', 3, 7, 10),
+('Le cours de yoga était très relaxant, je me sens bien reposé!', 2, 4, 9);

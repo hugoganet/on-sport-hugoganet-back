@@ -12,7 +12,7 @@ Activity.init(
       allowNull: false,
     },
     note: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     description: {

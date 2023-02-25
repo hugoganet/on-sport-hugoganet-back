@@ -7,7 +7,7 @@ const activityController = {
    * @param {*} _req Non requis
    * @param {*} res
    */
-  async getAllActivities(_req, res) {
+  async getAllActivities(req, res) {
     try {
       const activity = await Activity.findAll({ include: { model: Sport } });
       activity.length > 0 && res.status(200).json(activity);
