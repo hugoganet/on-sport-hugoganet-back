@@ -46,8 +46,8 @@ const activityController = {
   },
   async createActivity(req, res) {
     const json = JSON.parse(req.body.json);
-    console.log('JE SUIS LAAAA', req.file);
     json.photo = req.file.filename;
+
     try {
       await Activity.create({
         title: json.title,
