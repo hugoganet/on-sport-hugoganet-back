@@ -45,11 +45,9 @@ const activityController = {
     }
   },
   async createActivity(req, res) {
-    // console.log('DGTHYRJYTJ', req);
     const json = JSON.parse(req.body.json);
-
-    // const data = JSON.stringify(test);
-    // console.log(json);
+    console.log('JE SUIS LAAAA', req.file);
+    json.photo = req.file.filename;
     try {
       await Activity.create({
         title: json.title,
@@ -59,11 +57,10 @@ const activityController = {
         sport_id: json.sport_id,
         user_id: json.user_id,
         location_id: json.location_id,
-      }).then((result) => {
-        res.status(201).json({
-          message: 'Activity successful created',
-          activity: json,
-        });
+      });
+      res.status(201).json({
+        message: 'Activity successful created',
+        activity: json,
       });
     } catch (err) {
       res.status(404).json({ message: err });
