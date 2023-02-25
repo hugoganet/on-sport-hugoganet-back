@@ -45,15 +45,18 @@ const activityController = {
     }
   },
   async createActivity(req, res) {
+    const json = JSON.parse(req.body.json);
+    // const data = JSON.stringify(test);
+    console.log(json.sport_id);
     try {
       await Activity.create({
-        title: req.body.title,
-        note: req.body.note,
-        description: req.body.description,
-        family_tag: req.body.family_tag,
-        sport_id: req.body.sport_id,
-        user_id: req.body.user_id,
-        location_id: req.body.location_id,
+        title: json.title,
+        note: json.note,
+        description: json.description,
+        family_tag: json.family_tag,
+        sport_id: json.sport_id,
+        user_id: json.user_id,
+        location_id: json.location_id,
       }).then((result) => {
         res.status(201).json({
           message: 'Activity successful created',

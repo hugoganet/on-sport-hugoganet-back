@@ -16,21 +16,24 @@ export const controlUnique = {
     next();
   },
   async uniqueActivity(req, res, next) {
-    const { title, sport_id, user_id } = req.body;
+    const json = JSON.parse(req.body.json);
 
     if (
-      title === undefined ||
-      sport_id === undefined ||
-      user_id === undefined
+      json.title === undefined ||
+      json.sport_id === undefined ||
+      json.user_id === undefined
     ) {
       return res.status(400).json({ Error: 'Formulaire non complet' });
     }
 
-    const dataToControl = await Activity.findOne({ where: { title: title } });
+    const dataToControl = await Activity.findOne({
+      where: { title: json.title },
+    });
 
     if (dataToControl?.dataValues) {
       return res.status(400).json({ Error: "Nom d'activité déjà existant" });
     }
+    console.log('JE PASSE ICI');
     next();
   },
 };
