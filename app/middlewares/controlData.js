@@ -8,7 +8,6 @@ export const controlUnique = {
     if (login === undefined || password === undefined) {
       return res.status(400).json({ Error: 'Formulaire non complet' });
     }
-
     const dataToControl = await User.findOne({ where: { login: login } });
 
     if (dataToControl?.dataValues) {
