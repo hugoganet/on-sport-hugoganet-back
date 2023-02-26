@@ -6,16 +6,22 @@ import { controlSyntaxMiddleware } from '../middlewares/controlSyntaxMiddleware.
 import { controlUnique } from '../middlewares/controlData.js';
 import { uploadFile } from '../middlewares/uploadPhoto.js';
 
-activityRouter.get('/', activityController.getAllActivities);
-activityRouter.get('/:id', activityController.getActivityByID);
-activityRouter.post(
-  '/',
-  uploadFile,
-  controlUnique.uniqueActivity,
-  activityController.createActivity,
-);
-activityRouter.put('/:id', activityController.updateActivityByID);
-activityRouter.delete('/:id', activityController.deleteActivityByID);
+activityRouter
+  .route('/')
+  .get(activityController.getAllActivities)
+  .post(
+    uploadFile,
+    controlUnique.uniqueActivity,
+    activityController.createActivity,
+  );
+
+activityRouter
+  .route('/:id')
+  .get(activityController.getActivityByID)
+  .put(activityController.updateActivityByID)
+  .delete(activityController.deleteActivityByID);
+
+activityRouter.get('/:id/photo/:name', activityController.getPhoto);
 
 activityRouter.get(
   '/sport/:name',

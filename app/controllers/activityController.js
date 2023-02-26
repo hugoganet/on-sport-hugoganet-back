@@ -46,7 +46,6 @@ const activityController = {
   },
   async createActivity(req, res) {
     const json = JSON.parse(req.body.json);
-    json.photo = req.file.filename;
 
     try {
       await Activity.create({
@@ -58,9 +57,11 @@ const activityController = {
         user_id: json.user_id,
         location_id: json.location_id,
       });
+      const result = await Activity.findOne({ where: { title: json.title } });
+      result.dataValues.photo = req.file.filename;
       res.status(201).json({
         message: 'Activity successful created',
-        activity: json,
+        activity: result,
       });
     } catch (err) {
       res.status(404).json({ message: err });
@@ -110,6 +111,20 @@ const activityController = {
     } catch (error) {
       res.status(404).json({ message: error });
     }
+  },
+  getPhoto(req, res) {
+    const fileName = req.params.name;
+    const directoryPath = 'app/photos/';
+
+    res.download(directoryPath + fileName, fileName, (err) => {
+      console.log('DOWNLOAD');
+
+      if (err) {
+        res.status(500).send({
+          message: 'Could not download the file. ' + err,
+        });
+      }
+    });
   },
 };
 
