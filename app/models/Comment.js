@@ -9,6 +9,10 @@ Comment.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    activity_note: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

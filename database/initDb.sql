@@ -88,6 +88,7 @@ CREATE TABLE "comment"
 (
     "id" integer GENERATED ALWAYS AS IDENTITY,
     "content" text NOT NULL,
+    "activity_note" integer,
     "user_id" integer NOT NULL,
     "activity_id" integer NOT NULL,
     PRIMARY KEY (id),
