@@ -1,16 +1,17 @@
-INSERT INTO "sport"("name","icon")
+INSERT INTO "sport"("name")
 VALUES
-('athlétisme', 'athlétisme'),
-('natation', 'natation'),
-('tennis', 'tennis'),
-('gymnastique', 'gymnastique'),
-('ski alpin', 'ski alpin'),
-('escalade', 'escalade'),
-('golf', 'golf'),
-('boxe', 'boxe'),
-('judo', 'judo'),
-('cyclisme', 'cyclisme'),
-('sport de glisse - mer','glisse_mer');
+('escalade'),
+('running'),
+('cyclisme'),
+('sports de glisse - mer'),
+('sports de glisse - montagne'),
+('sports de glisse - urbain'),
+('randonnée'),
+('vtt'),
+('fitness'),
+('natation'),
+('yoga'),
+('autre sport');
 
 INSERT INTO "location"("department","city")
 VALUES
