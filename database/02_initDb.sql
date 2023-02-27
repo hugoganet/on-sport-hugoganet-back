@@ -10,11 +10,11 @@ CREATE TABLE "sport"
 
 CREATE TABLE "location" (
   "id" integer GENERATED ALWAYS AS IDENTITY,
-  "nom" VARCHAR(255) NOT NULL,
-  "codepostal" VARCHAR(255) NOT NULL,
-  "departement" VARCHAR(255) NOT NULL,
+  "name" VARCHAR(255) NOT NULL,
+  "postcode" VARCHAR(255) NOT NULL,
+  "department" VARCHAR(255) NOT NULL,
   PRIMARY KEY (id),
-		UNIQUE(nom,departement)
+		UNIQUE(name,department)
 );
 
 

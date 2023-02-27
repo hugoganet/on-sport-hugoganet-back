@@ -1,4 +1,4 @@
-INSERT INTO location(nom, codepostal, departement) VALUES
+INSERT INTO location(name, postcode, department) VALUES
 ('L''Abergement-Clémenciat', '01400', 'Ain'),
 ('L''Abergement-de-Varey', '01640', 'Ain'),
 ('Ambérieu-en-Bugey', '01500', 'Ain'),
