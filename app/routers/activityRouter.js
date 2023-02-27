@@ -9,11 +9,6 @@ import { uploadFile } from '../middlewares/uploadPhoto.js';
 activityRouter
   .route('/')
   .get(activityController.getAllActivities)
-  .post(
-    uploadFile,
-    controlUnique.uniqueActivity,
-    activityController.createActivity,
-  );
 
 activityRouter
   .route('/:id')
@@ -21,12 +16,30 @@ activityRouter
   .put(activityController.updateActivityByID)
   .delete(activityController.deleteActivityByID);
 
-activityRouter.get('/:id/photo/:name', activityController.getPhoto);
-
-activityRouter.get(
-  '/sport/:name',
-  controlSyntaxMiddleware.syntaxTypeControl,
-  activityController.getActivitiesBySport,
-);
+activityRouter
+  .route('/sport/:name')
+  .get(
+    controlSyntaxMiddleware.syntaxTypeControl,
+    activityController.getActivitiesBySport,
+  );
 
 export { activityRouter };
+
+
+// <<<<<<< uploadFile
+//   .post(
+//     uploadFile,
+//     controlUnique.uniqueActivity,
+//     activityController.createActivity,
+//   );
+
+// activityRouter
+//   .route('/:id')
+//   .get(activityController.getActivityByID)
+//   .put(activityController.updateActivityByID)
+//   .delete(activityController.deleteActivityByID);
+
+// activityRouter.get('/:id/photo/:name', activityController.getPhoto);
+// =======
+//   .post(controlUnique.uniqueActivity, activityController.createActivity);
+// >>>>>>> develop
