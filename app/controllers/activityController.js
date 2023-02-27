@@ -56,6 +56,7 @@ const activityController = {
         sport_id: json.sport_id,
         user_id: json.user_id,
         location_id: json.location_id,
+        photo: req.file.filename,
       });
       const result = await Activity.findOne({ where: { title: json.title } });
       result.dataValues.photo = req.file.filename;

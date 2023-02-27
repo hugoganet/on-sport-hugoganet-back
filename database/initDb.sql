@@ -47,6 +47,7 @@ CREATE TABLE "activity"
     "sport_id" integer NOT NULL,
     "user_id" integer NOT NULL,
     "location_id" integer,
+    "photo" text,
     PRIMARY KEY (id),
     CONSTRAINT sport_id FOREIGN KEY (sport_id)
         REFERENCES "sport" (id) MATCH SIMPLE

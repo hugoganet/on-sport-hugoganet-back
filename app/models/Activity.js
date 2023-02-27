@@ -23,6 +23,10 @@ Activity.init(
       type: DataTypes.BOOLEAN,
       allowNull: true,
     },
+    photo: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     sport_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

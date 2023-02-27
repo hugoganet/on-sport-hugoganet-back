@@ -6,14 +6,11 @@ import { controlSyntaxMiddleware } from '../middlewares/controlSyntaxMiddleware.
 import { controlUnique } from '../middlewares/controlData.js';
 import { uploadFile } from '../middlewares/uploadPhoto.js';
 
-activityRouter
-  .route('/')
-  .get(activityController.getAllActivities)
-  .post(
-    uploadFile,
-    controlUnique.uniqueActivity,
-    activityController.createActivity,
-  );
+activityRouter.route('/').get(activityController.getAllActivities).post(
+  uploadFile,
+  // controlUnique.uniqueActivity,
+  activityController.createActivity,
+);
 
 activityRouter
   .route('/:id')
