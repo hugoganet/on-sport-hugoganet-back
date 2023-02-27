@@ -45,19 +45,23 @@ const activityController = {
     }
   },
   async createActivity(req, res) {
+    const json = JSON.parse(req.body.json);
+
     try {
       await Activity.create({
-        title: req.body.title,
-        note: req.body.note,
-        description: req.body.description,
-        family_tag: req.body.family_tag,
-        sport_id: req.body.sport_id,
-        user_id: req.body.user_id,
-        location_id: req.body.location_id,
-      }).then((result) => {
-        res.status(201).json({
-          message: 'Activity successful created',
-        });
+        title: json.title,
+        note: json.note,
+        description: json.description,
+        family_tag: json.family_tag,
+        sport_id: json.sport_id,
+        user_id: json.user_id,
+        location_id: json.location_id,
+      });
+      const result = await Activity.findOne({ where: { title: json.title } });
+      result.dataValues.photo = req.file.filename;
+      res.status(201).json({
+        message: 'Activity successful created',
+        activity: result,
       });
     } catch (err) {
       res.status(404).json({ message: err });
@@ -107,6 +111,20 @@ const activityController = {
     } catch (error) {
       res.status(404).json({ message: error });
     }
+  },
+  getPhoto(req, res) {
+    const fileName = req.params.name;
+    const directoryPath = 'app/photos/';
+
+    res.download(directoryPath + fileName, fileName, (err) => {
+      console.log('DOWNLOAD');
+
+      if (err) {
+        res.status(500).send({
+          message: 'Could not download the file. ' + err,
+        });
+      }
+    });
   },
 };
 

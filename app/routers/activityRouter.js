@@ -4,11 +4,11 @@ const activityRouter = express.Router();
 import { activityController } from '../controllers/activityController.js';
 import { controlSyntaxMiddleware } from '../middlewares/controlSyntaxMiddleware.js';
 import { controlUnique } from '../middlewares/controlData.js';
+import { uploadFile } from '../middlewares/uploadPhoto.js';
 
 activityRouter
   .route('/')
   .get(activityController.getAllActivities)
-  .post(controlUnique.uniqueActivity, activityController.createActivity);
 
 activityRouter
   .route('/:id')
@@ -24,3 +24,22 @@ activityRouter
   );
 
 export { activityRouter };
+
+
+// <<<<<<< uploadFile
+//   .post(
+//     uploadFile,
+//     controlUnique.uniqueActivity,
+//     activityController.createActivity,
+//   );
+
+// activityRouter
+//   .route('/:id')
+//   .get(activityController.getActivityByID)
+//   .put(activityController.updateActivityByID)
+//   .delete(activityController.deleteActivityByID);
+
+// activityRouter.get('/:id/photo/:name', activityController.getPhoto);
+// =======
+//   .post(controlUnique.uniqueActivity, activityController.createActivity);
+// >>>>>>> develop

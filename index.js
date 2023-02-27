@@ -5,10 +5,12 @@ import { router } from './app/routers/index.js';
 import { sequelize } from './app/dataSource/onSportSource.js';
 import cors from 'cors';
 const port = process.env.PORT || 3000;
-
-app.use(express.urlencoded({ extended: false }));
+//
+//
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
+// for parsing multipart/form-data
+// app.use(upload.single());
 // Connexion Sequelize
 sequelize
   .authenticate()

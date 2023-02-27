@@ -1,5 +1,4 @@
 import { User } from '../models/User.js';
-import { Location } from '../models/Location.js';
 import bcrypt from 'bcrypt';
 import { schema } from '../dataValidation/joi.js';
 import { tokenController } from './token.js';
@@ -16,7 +15,7 @@ const authController = {
       email,
       password,
     });
-    console.log(verif.error);
+
     // // Si une erreur lors de la vérif, verif.error = True
 
     if (verif.error) {
