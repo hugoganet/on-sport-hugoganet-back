@@ -38,9 +38,11 @@ export const controlUnique = {
   // },
   // TEST
   async uniqueActivity(req, res, next) {
-    console.log('ICI', req.file, req.body.json);
-    const json = JSON.parse(req.body.json);
-    console.log(json);
+    let json;
+    if (req.body.json) {
+      json = JSON.parse(req.body.json);
+    }
+
     if (
       json.title === undefined ||
       json.sport_id === undefined ||
@@ -57,14 +59,16 @@ export const controlUnique = {
       where: { title: json.title },
     });
     console.log(dataToControl);
-    if (dataToControl?.dataValues) {
-      unlink(`app/photos/${req.file.filename}`, (err) => {
+    if (dataToControl?.dataValues && req.filename != undefined) {
+      unlink(`app/photos/${req.file?.filename}`, (err) => {
         if (err) throw err;
         console.log('path/file.txt was deleted');
       });
+    }
+    if (dataToControl?.dataValues) {
       return res.status(400).json({ Error: "Nom d'activité déjà existant" });
     }
-    console.log('JE PASSE ICI');
+
     next();
   },
 };
