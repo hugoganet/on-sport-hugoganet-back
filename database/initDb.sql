@@ -5,8 +5,7 @@ DROP TABLE IF EXISTS "sport","activity","photo","comment","user","location","use
 CREATE TABLE "sport"
 (
 	"id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	"name" TEXT NOT NULL UNIQUE,
-	"icon" TEXT 
+	"name" TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE "location"
@@ -27,7 +26,7 @@ CREATE TABLE "user"
     "password" text NOT NULL,
     "age" timestamptz,
     "bio" text,
-		"email" text NOT NULL UNIQUE,
+	"email" text NOT NULL UNIQUE,
     "location_id" integer,
     PRIMARY KEY (id),
     CONSTRAINT "Location_ID" FOREIGN KEY (location_id)

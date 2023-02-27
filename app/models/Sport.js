@@ -9,10 +9,6 @@ Sport.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    icon: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
   },
   {
     underscored: true,
