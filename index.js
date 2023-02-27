@@ -6,11 +6,6 @@ import { sequelize } from './app/dataSource/onSportSource.js';
 import cors from 'cors';
 const port = process.env.PORT || 3000;
 //
-import multer from 'multer';
-// const upload = multer();
-//
-//
-
 //
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
