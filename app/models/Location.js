@@ -10,11 +10,11 @@ Location.init(
       type: DataTypes.INTEGER,
       primaryKey: true,
     },
-    nom: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    codepostal: {
+    postcode: {
       type: DataTypes.STRING,
       allowNull: false,
     },
