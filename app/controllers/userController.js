@@ -9,6 +9,12 @@ const userController = {
       const user = await User.findOne({
         where: { id: userRequest },
       });
+      const activities = await Activity.findAll({
+        where: { user_id: userRequest },
+        include: { model: Sport },
+      });
+      // activities.dataValues.sportName = activities.dataValues.Sport.name;
+      user.dataValues.activitiesList = activities;
       res.json(user);
     } catch (err) {
       res.status(404).json({ message: err });

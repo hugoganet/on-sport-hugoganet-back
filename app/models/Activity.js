@@ -46,4 +46,4 @@ Activity.init(
   },
 );
 
-Activity.belongsTo(Sport, { foreignKey: 'id' });
+Activity.belongsTo(Sport, { foreignKey: 'sport_id' });
