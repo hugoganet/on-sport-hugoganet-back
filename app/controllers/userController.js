@@ -1,31 +1,8 @@
 import { User } from '../models/User.js';
 import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
-
-// const userController = {
-//   async getProfil(req, res) {
-//     const userRequest = req.params.id;
-//     try {
-//       const user = await User.findOne({
-//         where: { id: userRequest },
-//       });
-//       const activities = await Activity.findAll({
-//         where: { user_id: userRequest },
-//         include: { model: Sport },
-//       });
-//       const activitiesWithSportName = activities.map((activity) => {
-//         return {
-//           ...activity.dataValues,
-//           sportName: activity.Sport.name,
-//         };
-//       });
-//       user.dataValues.activitiesList = activities;
-//       res.json(user);
-//     } catch (err) {
-//       res.status(404).json({ message: err });
-//     }
-//   },
-// };
+import { where } from 'sequelize';
+import { sequelize } from '../dataSource/onSportSource.js';
 
 const userController = {
   async getProfil(req, res) {
@@ -55,6 +32,37 @@ const userController = {
       res.json(user);
     } catch (err) {
       res.status(404).json({ message: err });
+    }
+  },
+  async modifyProfil(req, res) {
+    const userRequest = req.params.id;
+    const {
+      firstname,
+      lastname,
+      login,
+      email,
+      age,
+      bio,
+      location_id,
+      password,
+    } = req.body;
+    try {
+      const newProfil = sequelize.query(
+        `UPDATE "user" SET
+              firstname = '${firstname}',
+              lastname = '${lastname}',
+              email = '${email}',
+              login = '${login}',
+              age = '${age}',
+              bio = '${bio}',
+              location_id = ${location_id},
+              password = '${password}'
+          WHERE id=${userRequest}`,
+      );
+
+      res.status(200).json(newProfil);
+    } catch (err) {
+      console.log(err);
     }
   },
 };

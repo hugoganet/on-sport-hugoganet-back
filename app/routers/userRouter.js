@@ -3,6 +3,9 @@ const userRouter = express.Router();
 
 import { userController } from '../controllers/userController.js';
 
-userRouter.get('/profil/:id', userController.getProfil);
+userRouter
+  .route('/profil/:id')
+  .get(userController.getProfil)
+  .put(userController.modifyProfil);
 
 export { userRouter };
