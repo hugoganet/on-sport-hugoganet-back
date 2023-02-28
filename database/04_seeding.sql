@@ -15,7 +15,7 @@ VALUES
 
 
 INSERT INTO "user" ("firstname", "lastname", "login", "password", "age", "bio", "email", "location_id") VALUES
-('Amélie', 'Perrin', 'aperrin', 'motdepasse1', '1990-05-16', 'Je suis passionnée de photographie et de nature.', 'aperrin@example.com', 20),
+('Amélie', 'Perrin', 'aperrin', 'motdepasse1', '1990-05-12', 'Je suis passionnée de photographie et de nature.', 'aperrin@example.com', 20),
 ('Léo', 'Fournier', 'lfournier', 'motdepasse2', '1991-11-23', 'Jaime les sports d''aventure et les défis.', 'lfournier@example.com', 115),
 ('Marie', 'Gauthier', 'mgauthier', 'motdepasse3', '1993-08-17', 'Je suis une grande fan de musique et de danse.', 'mgauthier@example.com', 32),
 ('Sophie', 'Renaud', 'srenaud', 'motdepasse4', '1992-06-03', 'Jadore voyager et découvrir de nouvelles cultures.', 'srenaud@example.com', 49),
