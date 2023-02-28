@@ -11,18 +11,22 @@ const activityController = {
     try {
       const activity = await Activity.findAll({ include: { model: Sport } });
       const result = await sequelize.query(`
-        SELECT 
+      SELECT 
           a.id,a.title,a.note,
           a.description,
           a.family_tag,
           a.photo,user_id,
           u.firstname as user_firstname,
           a.sport_id,
-          s.name as sport_name
-        FROM activity a JOIN "user" u
-        ON a.user_id = u.id
-        JOIN sport s
-        ON a.sport_id = s.id;`);
+          s.name as sport_name,
+          a.location_id
+      FROM activity a
+      JOIN "user" u
+      ON a.user_id = u.id
+      JOIN sport s
+      ON a.sport_id = s.id
+      JOIN location l
+      ON l.id = a.location_id;`);
       activity.length > 0 && res.status(200).json(result[0]);
     } catch (err) {
       console.log(err);

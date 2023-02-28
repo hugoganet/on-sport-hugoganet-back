@@ -15,6 +15,14 @@ export const controlUnique = {
     }
     next();
   },
+  async loginNotEmpty(req, res, next) {
+    const { login, password } = req.body;
+
+    if (login === undefined || password === undefined) {
+      return res.status(400).json({ Error: 'Formulaire non complet' });
+    }
+    next();
+  },
   async uniqueActivity(req, res, next) {
     let json;
     if (req.body?.json) {

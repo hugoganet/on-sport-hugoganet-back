@@ -5,6 +5,6 @@ import { authController } from '../controllers/authController.js';
 import { controlUnique } from '../middlewares/controlData.js';
 
 authRouter.post('/signup', controlUnique.uniqueUser, authController.signup);
-authRouter.post('/signin', controlUnique.uniqueUser, authController.signin);
+authRouter.post('/signin', controlUnique.loginNotEmpty, authController.signin);
 
 export { authRouter };
