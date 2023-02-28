@@ -1,16 +1,33 @@
 import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
-
+import { sequelize } from '../dataSource/onSportSource.js';
 const activityController = {
   /**
    * Récupérer la liste complète des activités.
    * @param {*} _req Non requis
    * @param {*} res
    */
-  async getAllActivities(req, res) {
+  async getAllActivities(_req, res) {
     try {
       const activity = await Activity.findAll({ include: { model: Sport } });
-      activity.length > 0 && res.status(200).json(activity);
+      const result = await sequelize.query(`
+      SELECT 
+          a.id,a.title,a.note,
+          a.description,
+          a.family_tag,
+          a.photo,user_id,
+          u.firstname as user_firstname,
+          a.sport_id,
+          s.name as sport_name,
+          a.location_id
+      FROM activity a
+      JOIN "user" u
+      ON a.user_id = u.id
+      JOIN sport s
+      ON a.sport_id = s.id
+      JOIN location l
+      ON l.id = a.location_id;`);
+      activity.length > 0 && res.status(200).json(result[0]);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -46,7 +63,8 @@ const activityController = {
   },
   async createActivity(req, res) {
     const json = JSON.parse(req.body.json);
-
+    console.log('CONTROLLER', json);
+    console.log(json.title);
     try {
       await Activity.create({
         title: json.title,
@@ -56,10 +74,11 @@ const activityController = {
         sport_id: json.sport_id,
         user_id: json.user_id,
         location_id: json.location_id,
-        photo: req.file.filename,
       });
       const result = await Activity.findOne({ where: { title: json.title } });
-      result.dataValues.photo = req.file.filename;
+      if (req.file) {
+        result.dataValues.photo = req.file.filename;
+      }
       res.status(201).json({
         message: 'Activity successful created',
         activity: result,

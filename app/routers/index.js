@@ -7,6 +7,7 @@ import { authRouter } from './authRouter.js';
 import { userRouter } from './userRouter.js';
 import { activityRouter } from './activityRouter.js';
 import { commentRouter } from './commentRouter.js';
+import { locationRouter } from './locationRouter.js';
 import { mainRouter } from './mainRouter.js';
 
 router.use('/api/auth', authRouter);
@@ -14,6 +15,7 @@ router.use('/api/auth', authRouter);
 router.use('/api/user', userRouter);
 router.use('/api/activity', activityRouter);
 router.use('/api/comment', commentRouter);
+router.use('/api/location', locationRouter);
 router.use('/api', mainRouter);
 router.use('/', mainRouter);
 

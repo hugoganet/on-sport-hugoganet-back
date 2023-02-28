@@ -10,11 +10,15 @@ Location.init(
       type: DataTypes.INTEGER,
       primaryKey: true,
     },
-    department: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    city: {
+    postcode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    department: {
       type: DataTypes.STRING,
       allowNull: false,
     },

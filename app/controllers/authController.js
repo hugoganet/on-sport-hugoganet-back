@@ -51,7 +51,7 @@ const authController = {
   async signin(req, res) {
     const { login, password } = req.body;
     const currentUser = await User.findOne({ where: { login } });
-    console.log(currentUser.dataValues.firstname);
+    //console.log(currentUser?.dataValues?.firstname);
     try {
       const decryptPassword = await bcrypt.compare(
         password,
@@ -65,7 +65,11 @@ const authController = {
       const tokenUser = await tokenController.genToken({ login });
       res
         .status(200)
-        .json({ tokenUser, firstname: currentUser.dataValues.firstname });
+        .json({
+          tokenUser,
+          username: currentUser?.dataValues?.login,
+          id: currentUser?.dataValues?.id,
+        });
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
