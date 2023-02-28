@@ -1,4 +1,3 @@
-import { Activity } from '../models/Activity.js';
 import { Comment } from '../models/Comment.js';
 
 const commentController = {
