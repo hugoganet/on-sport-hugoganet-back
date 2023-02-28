@@ -1,8 +1,10 @@
 import { User } from '../models/User.js';
 import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
-import { where } from 'sequelize';
+
 import { sequelize } from '../dataSource/onSportSource.js';
+import bcrypt from 'bcrypt';
+const saltRounds = 10;
 
 const userController = {
   async getProfil(req, res) {
@@ -35,6 +37,8 @@ const userController = {
     }
   },
   async modifyProfil(req, res) {
+    const jsonAsString = JSON.parse(req.body.jsonAsString);
+
     const userRequest = req.params.id;
     const {
       firstname,
@@ -46,17 +50,20 @@ const userController = {
       location_id,
       password,
     } = req.body;
+
+    const hashPassword = await bcrypt.hash(jsonAsString.password, saltRounds);
+
     try {
       const newProfil = sequelize.query(
         `UPDATE "user" SET
-              firstname = '${firstname}',
-              lastname = '${lastname}',
-              email = '${email}',
-              login = '${login}',
-              age = '${age}',
-              bio = '${bio}',
-              location_id = ${location_id},
-              password = '${password}'
+              firstname = '${jsonAsString.firstname}',
+              lastname = '${jsonAsString.lastname}',
+              email = '${jsonAsString.email}',
+              login = '${jsonAsString.login}',
+              age = '${jsonAsString.age}',
+              bio = '${jsonAsString.bio}',
+              location_id = ${jsonAsString.location_id},
+              password = '${hashPassword}'
           WHERE id=${userRequest}`,
       );
 
