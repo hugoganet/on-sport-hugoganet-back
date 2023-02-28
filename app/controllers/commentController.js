@@ -20,10 +20,10 @@ const commentController = {
         activity_note: req.body.activity_note,
         user_id: req.body.user_id,
         activity_id: req.params.id,
-      }).then((result) => {
-        res.status(201).json({
-          message: 'Comment successful created',
-        });
+      });
+
+      res.status(201).json({
+        message: 'Comment successful created',
       });
     } catch (error) {
       res.status(404).json({ message: error });
@@ -31,16 +31,14 @@ const commentController = {
   },
   async deletePostByID(req, res) {
     try {
-      await Comment.findAll({ where: { id: req.params.id } }).then(
-        async (result) => {
-          if (result.length > 0) {
-            await Comment.destroy({ where: { id: req.params.id } }),
-              res.status(200).json({ message: 'delete comment successfully' });
-          } else {
-            res.status(404).json({ message: 'id comment not found' });
-          }
-        },
-      );
+      const result = await Comment.findAll({ where: { id: req.params.id } });
+
+      if (result.length > 0) {
+        await Comment.destroy({ where: { id: req.params.id } });
+        res.status(200).json({ message: 'delete comment successfully' });
+      } else {
+        res.status(404).json({ message: 'id comment not found' });
+      }
     } catch (error) {
       res.status(404).json({ message: error });
     }
