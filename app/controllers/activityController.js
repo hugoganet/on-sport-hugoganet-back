@@ -1,6 +1,8 @@
 import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
 import { sequelize } from '../dataSource/onSportSource.js';
+import { Photo } from '../models/Photo.js';
+
 const activityController = {
   /**
    * Récupérer la liste complète des activités.
@@ -76,9 +78,15 @@ const activityController = {
         location_id: json.location_id,
       });
       const result = await Activity.findOne({ where: { title: json.title } });
-      if (req.file) {
-        result.dataValues.photo = req.file.filename;
-      }
+      // if (req.file) {
+      //   result.dataValues.photo = req.file.filename;
+      // }
+
+      // Upload photo process
+      await Photo.create({
+        name: req.file.filename,
+        activity_id: result.dataValues.id,
+      });
       res.status(201).json({
         message: 'Activity successful created',
         activity: result,
@@ -104,6 +112,7 @@ const activityController = {
               },
               { where: { id: req.params.id } },
             );
+
             res.status(200).json({
               message: 'update successful',
             });

@@ -1,7 +1,7 @@
 import { User } from '../models/User.js';
 import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
-
+import { Photo } from '../models/Photo.js';
 import { sequelize } from '../dataSource/onSportSource.js';
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
@@ -66,6 +66,11 @@ const userController = {
               password = '${hashPassword}'
           WHERE id=${userRequest}`,
       );
+      // Upload photo process
+      await Photo.create({
+        name: req.file.filename,
+        user_id: userRequest,
+      });
 
       res.status(200).json(newProfil);
     } catch (err) {
