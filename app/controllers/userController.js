@@ -67,7 +67,7 @@ const userController = {
           WHERE id=${userRequest}`,
       );
       // Upload photo process
-      await Photo.create({
+      const newPhotoProfil = await Photo.create({
         name: req.file.filename,
         user_id: userRequest,
       });
@@ -76,6 +76,21 @@ const userController = {
     } catch (err) {
       console.log(err);
     }
+  },
+  async getPhoto(req, res) {
+    const fileName = req.params.name;
+
+    const directoryPath = 'app/photos/';
+
+    res.download(directoryPath + fileName, fileName, (err) => {
+      console.log('DOWNLOAD');
+
+      if (err) {
+        res.status(500).send({
+          message: 'Could not download the file. ' + err,
+        });
+      }
+    });
   },
 };
 

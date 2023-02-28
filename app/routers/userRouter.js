@@ -9,4 +9,5 @@ userRouter
   .get(userController.getProfil)
   .put(uploadFile, userController.modifyProfil);
 
+userRouter.route('/profil/:id/photo/:name').get(userController.getPhoto);
 export { userRouter };
