@@ -26,10 +26,11 @@ export const controlUnique = {
       json?.sport_id === undefined ||
       json?.user_id === undefined
     ) {
-      unlink(`app/photos/${req.file.filename}`, (err) => {
-        if (err) throw err;
-        console.log('path/file.txt was deleted');
-      });
+      if (req?.file?.filename)
+        unlink(`app/photos/${req?.file?.filename}`, (err) => {
+          if (err) throw err;
+          console.log('path/file.txt was deleted');
+        });
       return res.status(400).json({ Error: 'Formulaire non complet' });
     }
 
