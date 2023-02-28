@@ -27,6 +27,7 @@ INSERT INTO "user" ("firstname", "lastname", "login", "password", "age", "bio", 
 ('Aurélie', 'Girard', 'agirard', 'motdepasse10', '1994-04-26', 'Je suis passionnée par la mode et les tendances.', 'agirard@example.com', 165);
 
 
+
 INSERT INTO "activity" ("title", "note", "description", "family_tag", "sport_id", "user_id", "location_id")
  VALUES
 ('Escalade en falaise', 1, 'Sortie descalade en falaise, niveau confirmé.', true, 1, 2, 326),

@@ -25,7 +25,7 @@ CREATE TABLE "user"
     "lastname" text NOT NULL,
     "login" text NOT NULL UNIQUE,
     "password" text NOT NULL,
-    "age" DATE,
+    "age" timestamptz,
     "bio" text,
 	"email" text NOT NULL UNIQUE,
     "location_id" integer,

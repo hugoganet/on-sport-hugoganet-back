@@ -27,7 +27,7 @@ User.init(
       allowNull: false,
     },
     age: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.STRING,
       allowNull: true,
     },
     bio: {
