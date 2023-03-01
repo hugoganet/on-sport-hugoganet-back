@@ -21,13 +21,16 @@ const activityController = {
           u.firstname as user_firstname,
           a.sport_id,
           s.name as sport_name,
-          a.location_id
+          a.location_id,
+          l.name as "localationName",
+          l.postcode as "localationPostcode",
+          l.department as "localationDepartment"
       FROM activity a
-      JOIN "user" u
+      LEFT JOIN "user" u
       ON a.user_id = u.id
-      JOIN sport s
+      LEFT JOIN sport s
       ON a.sport_id = s.id
-      JOIN location l
+      LEFT JOIN location l
       ON l.id = a.location_id;`);
       activity.length > 0 && res.status(200).json(result[0]);
     } catch (err) {

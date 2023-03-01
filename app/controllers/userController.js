@@ -8,13 +8,13 @@ const saltRounds = 10;
 
 const userController = {
   async getProfil(req, res) {
-    const userRequest = req.params.id;
+    const userId = req.params.id;
     try {
       const user = await User.findOne({
-        where: { id: userRequest },
+        where: { id: userId },
       });
       const activities = await Activity.findAll({
-        where: { user_id: userRequest },
+        where: { user_id: userId },
         include: { model: Sport },
       });
       const activitiesList = activities.map((activity) => {
@@ -30,8 +30,13 @@ const userController = {
           location_id: activity.location_id,
         };
       });
+      const userPhotoProfil = await Photo.findOne({
+        where: { user_id: userId },
+      });
       user.dataValues.activitiesList = activitiesList;
-      res.json(user);
+      delete user.password;
+      console.log(user);
+      res.status(200).json(user);
     } catch (err) {
       res.status(404).json({ message: err });
     }
@@ -39,7 +44,7 @@ const userController = {
   async modifyProfil(req, res) {
     const jsonAsString = JSON.parse(req.body.jsonAsString);
 
-    const userRequest = req.params.id;
+    const userId = req.params.id;
     const {
       firstname,
       lastname,
@@ -64,14 +69,14 @@ const userController = {
               bio = '${jsonAsString.bio}',
               location_id = ${jsonAsString.location_id},
               password = '${hashPassword}'
-          WHERE id=${userRequest}
-          RETURNING id,firstname,lastname,email,login,age,bio,location_id`,
+          WHERE id=${userId}
+          RETURNING id,firstname,lastname,email,login,age,bio,location_id,`,
       );
       // Upload photo process
       if (req.file) {
         await Photo.create({
           name: req.file.filename,
-          user_id: userRequest,
+          user_id: userId,
         });
       }
       console.log(newProfil);
