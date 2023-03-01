@@ -42,6 +42,7 @@ const activityController = {
   },
   async getActivityByID(req, res) {
     const activityRequest = req.params.id;
+    console.log(activityRequest);
     try {
       const activity = await Activity.findOne({
         where: { id: activityRequest },
@@ -56,14 +57,15 @@ const activityController = {
         photo: activity.photo,
         sportID: activity.Sport.id,
         sportName: activity.Sport.name,
-        location_id: activity.Location.id,
-        locationName: activity.Location.name,
-        locationPostcode: activity.Location.postcode,
-        locationDepartment: activity.Location.department,
+        location_id: activity.Location?.id,
+        locationName: activity.Location?.name,
+        locationPostcode: activity.Location?.postcode,
+        locationDepartment: activity.Location?.department,
       };
       activity.dataValues.activityDetail = activityDetail;
       res.json(activityDetail);
     } catch (err) {
+      console.log(err);
       res.status(404).json({ message: 'Activity not found' });
     }
   },
