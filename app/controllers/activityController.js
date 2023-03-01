@@ -102,29 +102,31 @@ const activityController = {
     }
   },
   async createActivity(req, res) {
-    const json = JSON.parse(req.body.json);
-    console.log('CONTROLLER', json);
-    console.log(json.title);
+    console.log('ICI :');
+    const jsonAsString = JSON.parse(req.body.jsonAsString);
+
     try {
       await Activity.create({
-        title: json.title,
-        note: json.note,
-        description: json.description,
-        family_tag: json.family_tag,
-        sport_id: json.sport_id,
-        user_id: json.user_id,
-        location_id: json.location_id,
+        title: jsonAsString.title,
+        note: jsonAsString.note,
+        description: jsonAsString.description,
+        family_tag: jsonAsString.family_tag,
+        sport_id: jsonAsString.sport_id,
+        user_id: jsonAsString.user_id,
+        location_id: jsonAsString.location_id,
       });
-      const result = await Activity.findOne({ where: { title: json.title } });
-      // if (req.file) {
-      //   result.dataValues.photo = req.file.filename;
-      // }
+      const result = await Activity.findOne({
+        where: { title: jsonAsString.title },
+      });
+      if (req?.file) {
+        result.dataValues.photo = req.file?.filename;
+        // Upload photo process
+        await Photo.create({
+          name: req.file.filename,
+          activity_id: result.dataValues.id,
+        });
+      }
 
-      // Upload photo process
-      await Photo.create({
-        name: req.file.filename,
-        activity_id: result.dataValues.id,
-      });
       res.status(201).json({
         message: 'Activity successful created',
         activity: result,
