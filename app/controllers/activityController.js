@@ -65,7 +65,6 @@ const activityController = {
       activity.dataValues.activityDetail = activityDetail;
       res.json(activityDetail);
     } catch (err) {
-      console.log(err);
       res.status(404).json({ message: 'Activity not found' });
     }
   },
