@@ -62,7 +62,7 @@ const activityController = {
         locationDepartment: activity.Location.department,
       };
       activity.dataValues.activityDetail = activityDetail;
-      res.json(activityDetail);
+      res.status(200).json(activityDetail);
     } catch (err) {
       res.status(404).json({ message: 'Activity not found' });
     }
