@@ -1,6 +1,8 @@
 import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
+import { Location } from '../models/Location.js';
 import { sequelize } from '../dataSource/onSportSource.js';
+
 const activityController = {
   /**
    * Récupérer la liste complète des activités.
@@ -38,10 +40,26 @@ const activityController = {
     try {
       const activity = await Activity.findOne({
         where: { id: activityRequest },
+        include: [{ model: Sport }, { model: Location }],
       });
-      res.json(activity);
+      const activityDetail = {
+        id: activity.id,
+        title: activity.title,
+        note: activity.note,
+        description: activity.description,
+        family_tag: activity.family_tag,
+        photo: activity.photo,
+        sportID: activity.Sport.id,
+        sportName: activity.Sport.name,
+        location_id: activity.Location.id,
+        locationName: activity.Location.name,
+        locationPostcode: activity.Location.postcode,
+        locationDepartment: activity.Location.department,
+      };
+      activity.dataValues.activityDetail = activityDetail;
+      res.json(activityDetail);
     } catch (err) {
-      console.log(err);
+      res.status(404).json({ message: 'Activity not found' });
     }
   },
   /**
@@ -51,14 +69,31 @@ const activityController = {
    */
   async getActivitiesBySport(req, res) {
     const sportRequest = req.params.name.toLowerCase();
-    const idSport = await Sport.findOne({ where: { name: sportRequest } });
+    // const idSport = await Sport.findOne({ where: { name: sportRequest } });
     try {
-      const listActivities = await Activity.findAll({
-        where: { sport_id: idSport.id },
+      const activities = await Activity.findAll({
+        include: [{ model: Sport }, { model: Location }],
+        where: { '$Sport.name$': sportRequest },
       });
-      res.json(listActivities);
+      const activitiesDetails = activities.map((activity) => {
+        return {
+          id: activity.id,
+          title: activity.title,
+          note: activity.note,
+          description: activity.description,
+          family_tag: activity.family_tag,
+          photo: activity.photo,
+          sportID: activity.Sport.id,
+          sportName: activity.Sport.name,
+          location_id: activity.Location.id,
+          locationName: activity.Location.name,
+          locationPostcode: activity.Location.postcode,
+          locationDepartment: activity.Location.department,
+        };
+      });
+      res.json(activitiesDetails);
     } catch (err) {
-      console.log(err);
+      res.status(404).json({ message: 'Activities not found' });
     }
   },
   async createActivity(req, res) {

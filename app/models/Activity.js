@@ -2,6 +2,7 @@ import { Model, DataTypes } from 'sequelize';
 
 import { sequelize } from '../dataSource/onSportSource.js';
 import { Sport } from './Sport.js';
+import { Location } from './Location.js';
 
 export class Activity extends Model {}
 
@@ -51,3 +52,4 @@ Activity.init(
 );
 
 Activity.belongsTo(Sport, { foreignKey: 'sport_id' });
+Activity.belongsTo(Location, { foreignKey: 'location_id' });
