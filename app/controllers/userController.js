@@ -54,7 +54,7 @@ const userController = {
     const hashPassword = await bcrypt.hash(jsonAsString.password, saltRounds);
 
     try {
-      const newProfil = sequelize.query(
+      const newProfil = await sequelize.query(
         `UPDATE "user" SET
               firstname = '${jsonAsString.firstname}',
               lastname = '${jsonAsString.lastname}',
@@ -64,14 +64,17 @@ const userController = {
               bio = '${jsonAsString.bio}',
               location_id = ${jsonAsString.location_id},
               password = '${hashPassword}'
-          WHERE id=${userRequest}`,
+          WHERE id=${userRequest}
+          RETURNING id,firstname,lastname,email,login,age,bio,location_id`,
       );
       // Upload photo process
-      const newPhotoProfil = await Photo.create({
-        name: req.file.filename,
-        user_id: userRequest,
-      });
-
+      if (req.file) {
+        await Photo.create({
+          name: req.file.filename,
+          user_id: userRequest,
+        });
+      }
+      console.log(newProfil);
       res.status(200).json(newProfil);
     } catch (err) {
       console.log(err);
