@@ -17,7 +17,7 @@ const userController = {
         where: { user_id: userId },
         include: { model: Sport },
       });
-      const activitiesList = activities.map((activity) => {
+      const activitiesList = await activities.map((activity) => {
         return {
           id: activity.id,
           title: activity.title,
@@ -30,10 +30,14 @@ const userController = {
           location_id: activity.location_id,
         };
       });
+
       const userPhotoProfil = await Photo.findOne({
         where: { user_id: userId },
       });
-      user.dataValues.photo = userPhotoProfil.dataValues.name;
+      if (userPhotoProfil) {
+        user.dataValues.photo = userPhotoProfil.dataValues.name;
+      }
+
       user.dataValues.activitiesList = activitiesList;
       delete user.dataValues.password;
       res.status(200).json(user);
@@ -45,18 +49,10 @@ const userController = {
     const jsonAsString = JSON.parse(req.body.jsonAsString);
 
     const userId = req.params.id;
-    const {
-      firstname,
-      lastname,
-      login,
-      email,
-      age,
-      bio,
-      location_id,
-      password,
-    } = req.body;
-
-    const hashPassword = await bcrypt.hash(jsonAsString.password, saltRounds);
+    let hashPassword;
+    if (jsonAsString.password) {
+      hashPassword = await bcrypt.hash(jsonAsString.password, saltRounds);
+    }
 
     try {
       const newProfil = await sequelize.query(
@@ -73,32 +69,36 @@ const userController = {
           RETURNING id,firstname,lastname,email,login,age,bio,location_id`,
       );
       // Upload photo process
-      if (req.file) {
+      if (req?.file) {
         await Photo.create({
-          name: req.file.filename,
+          name: req.file?.filename,
           user_id: userId,
         });
       }
-      console.log(newProfil);
+
       res.status(200).json(newProfil[0][0]);
     } catch (err) {
-      console.log(err);
+      //console.log('START ', err.errors[0].message);
+      res.status(400).json({ error: err.errors[0].message });
+      // console.log(err);
     }
   },
   async getPhoto(req, res) {
-    const fileName = req.params.name;
-
-    const directoryPath = 'app/photos/';
-
-    res.download(directoryPath + fileName, fileName, (err) => {
-      console.log('DOWNLOAD');
-
-      if (err) {
-        res.status(500).send({
-          message: 'Could not download the file. ' + err,
-        });
-      }
-    });
+    try {
+      const fileName = req.params.name;
+      const directoryPath = 'app/photos/';
+      res.download(directoryPath + fileName, fileName, (err) => {
+        if (err) {
+          //console.log('Error downloading file:', err);
+          res.status(500).json({ message: 'Could not download the file.' });
+          return;
+        }
+        //console.log('File downloaded successfully.');
+      });
+    } catch (err) {
+      //console.log('Error:', err);
+      res.status(500).json({ message: 'An error occurred.' });
+    }
   },
 };
 

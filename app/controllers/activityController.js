@@ -3,9 +3,7 @@ import { Sport } from '../models/Sport.js';
 import { Location } from '../models/Location.js';
 import { sequelize } from '../dataSource/onSportSource.js';
 
-
 import { Photo } from '../models/Photo.js';
-
 
 const activityController = {
   /**
@@ -23,12 +21,12 @@ const activityController = {
           a.family_tag,
           a.photo,user_id,
           u.firstname as user_firstname,
-          a.sport_id,
-          s.name as sport_name,
+          a.sport_id as "sportID",
+          s.name as "sportName",
           a.location_id,
-          l.name as "localationName",
-          l.postcode as "localationPostcode",
-          l.department as "localationDepartment"
+          l.name as "locationName",
+          l.postcode as "locationPostcode",
+          l.department as "locationDepartment"
       FROM activity a
       LEFT JOIN "user" u
       ON a.user_id = u.id
