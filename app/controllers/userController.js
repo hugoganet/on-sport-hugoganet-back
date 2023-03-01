@@ -33,9 +33,9 @@ const userController = {
       const userPhotoProfil = await Photo.findOne({
         where: { user_id: userId },
       });
+      user.dataValues.photo = userPhotoProfil.dataValues.name;
       user.dataValues.activitiesList = activitiesList;
-      delete user.password;
-      console.log(user);
+      delete user.dataValues.password;
       res.status(200).json(user);
     } catch (err) {
       res.status(404).json({ message: err });
@@ -70,7 +70,7 @@ const userController = {
               location_id = ${jsonAsString.location_id},
               password = '${hashPassword}'
           WHERE id=${userId}
-          RETURNING id,firstname,lastname,email,login,age,bio,location_id,`,
+          RETURNING id,firstname,lastname,email,login,age,bio,location_id`,
       );
       // Upload photo process
       if (req.file) {
@@ -80,7 +80,7 @@ const userController = {
         });
       }
       console.log(newProfil);
-      res.status(200).json(newProfil);
+      res.status(200).json(newProfil[0][0]);
     } catch (err) {
       console.log(err);
     }
