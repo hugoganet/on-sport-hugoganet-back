@@ -15,7 +15,7 @@ VALUES
 
 
 INSERT INTO "user" ("firstname", "lastname", "login", "password", "age", "bio", "email", "location_id") VALUES
-('Amélie', 'Perrin', 'aperrin', 'motdepasse1', '1990-05-16', 'Je suis passionnée de photographie et de nature.', 'aperrin@example.com', 20),
+('Amélie', 'Perrin', 'aperrin', 'motdepasse1', '1990-05-12', 'Je suis passionnée de photographie et de nature.', 'aperrin@example.com', 20),
 ('Léo', 'Fournier', 'lfournier', 'motdepasse2', '1991-11-23', 'Jaime les sports d''aventure et les défis.', 'lfournier@example.com', 115),
 ('Marie', 'Gauthier', 'mgauthier', 'motdepasse3', '1993-08-17', 'Je suis une grande fan de musique et de danse.', 'mgauthier@example.com', 32),
 ('Sophie', 'Renaud', 'srenaud', 'motdepasse4', '1992-06-03', 'Jadore voyager et découvrir de nouvelles cultures.', 'srenaud@example.com', 49),
@@ -25,6 +25,7 @@ INSERT INTO "user" ("firstname", "lastname", "login", "password", "age", "bio", 
 ('Elodie', 'Mercier', 'emercier', 'motdepasse8', '1986-09-25', 'Je suis passionnée de cuisine et jadore préparer de bons petits plats pour mes amis.', 'emercier@example.com', 383),
 ('Antoine', 'Berger', 'aberger', 'motdepasse9', '1988-07-11', 'Je suis un grand amateur de vin et jaime découvrir de nouveaux crus.', 'aberger@example.com', 285),
 ('Aurélie', 'Girard', 'agirard', 'motdepasse10', '1994-04-26', 'Je suis passionnée par la mode et les tendances.', 'agirard@example.com', 165);
+
 
 
 INSERT INTO "activity" ("title", "note", "description", "family_tag", "sport_id", "user_id", "location_id")

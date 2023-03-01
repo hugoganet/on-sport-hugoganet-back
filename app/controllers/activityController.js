@@ -1,6 +1,10 @@
 import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
+import { Location } from '../models/Location.js';
 import { sequelize } from '../dataSource/onSportSource.js';
+
+import { Photo } from '../models/Photo.js';
+
 const activityController = {
   /**
    * Récupérer la liste complète des activités.
@@ -17,15 +21,18 @@ const activityController = {
           a.family_tag,
           a.photo,user_id,
           u.firstname as user_firstname,
-          a.sport_id,
-          s.name as sport_name,
-          a.location_id
+          a.sport_id as "sportID",
+          s.name as "sportName",
+          a.location_id,
+          l.name as "locationName",
+          l.postcode as "locationPostcode",
+          l.department as "locationDepartment"
       FROM activity a
-      JOIN "user" u
+      LEFT JOIN "user" u
       ON a.user_id = u.id
-      JOIN sport s
+      LEFT JOIN sport s
       ON a.sport_id = s.id
-      JOIN location l
+      LEFT JOIN location l
       ON l.id = a.location_id;`);
       activity.length > 0 && res.status(200).json(result[0]);
     } catch (err) {
@@ -38,10 +45,26 @@ const activityController = {
     try {
       const activity = await Activity.findOne({
         where: { id: activityRequest },
+        include: [{ model: Sport }, { model: Location }],
       });
-      res.json(activity);
+      const activityDetail = {
+        id: activity.id,
+        title: activity.title,
+        note: activity.note,
+        description: activity.description,
+        family_tag: activity.family_tag,
+        photo: activity.photo,
+        sportID: activity.Sport.id,
+        sportName: activity.Sport.name,
+        location_id: activity.Location.id,
+        locationName: activity.Location.name,
+        locationPostcode: activity.Location.postcode,
+        locationDepartment: activity.Location.department,
+      };
+      activity.dataValues.activityDetail = activityDetail;
+      res.json(activityDetail);
     } catch (err) {
-      console.log(err);
+      res.status(404).json({ message: 'Activity not found' });
     }
   },
   /**
@@ -51,14 +74,31 @@ const activityController = {
    */
   async getActivitiesBySport(req, res) {
     const sportRequest = req.params.name.toLowerCase();
-    const idSport = await Sport.findOne({ where: { name: sportRequest } });
+    // const idSport = await Sport.findOne({ where: { name: sportRequest } });
     try {
-      const listActivities = await Activity.findAll({
-        where: { sport_id: idSport.id },
+      const activities = await Activity.findAll({
+        include: [{ model: Sport }, { model: Location }],
+        where: { '$Sport.name$': sportRequest },
       });
-      res.json(listActivities);
+      const activitiesDetails = activities.map((activity) => {
+        return {
+          id: activity.id,
+          title: activity.title,
+          note: activity.note,
+          description: activity.description,
+          family_tag: activity.family_tag,
+          photo: activity.photo,
+          sportID: activity.Sport.id,
+          sportName: activity.Sport.name,
+          location_id: activity.Location.id,
+          locationName: activity.Location.name,
+          locationPostcode: activity.Location.postcode,
+          locationDepartment: activity.Location.department,
+        };
+      });
+      res.json(activitiesDetails);
     } catch (err) {
-      console.log(err);
+      res.status(404).json({ message: 'Activities not found' });
     }
   },
   async createActivity(req, res) {
@@ -76,9 +116,15 @@ const activityController = {
         location_id: json.location_id,
       });
       const result = await Activity.findOne({ where: { title: json.title } });
-      if (req.file) {
-        result.dataValues.photo = req.file.filename;
-      }
+      // if (req.file) {
+      //   result.dataValues.photo = req.file.filename;
+      // }
+
+      // Upload photo process
+      await Photo.create({
+        name: req.file.filename,
+        activity_id: result.dataValues.id,
+      });
       res.status(201).json({
         message: 'Activity successful created',
         activity: result,
@@ -104,6 +150,7 @@ const activityController = {
               },
               { where: { id: req.params.id } },
             );
+
             res.status(200).json({
               message: 'update successful',
             });
