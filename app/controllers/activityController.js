@@ -3,6 +3,10 @@ import { Sport } from '../models/Sport.js';
 import { Location } from '../models/Location.js';
 import { sequelize } from '../dataSource/onSportSource.js';
 
+
+import { Photo } from '../models/Photo.js';
+
+
 const activityController = {
   /**
    * Récupérer la liste complète des activités.
@@ -21,13 +25,16 @@ const activityController = {
           u.firstname as user_firstname,
           a.sport_id,
           s.name as sport_name,
-          a.location_id
+          a.location_id,
+          l.name as "localationName",
+          l.postcode as "localationPostcode",
+          l.department as "localationDepartment"
       FROM activity a
-      JOIN "user" u
+      LEFT JOIN "user" u
       ON a.user_id = u.id
-      JOIN sport s
+      LEFT JOIN sport s
       ON a.sport_id = s.id
-      JOIN location l
+      LEFT JOIN location l
       ON l.id = a.location_id;`);
       activity.length > 0 && res.status(200).json(result[0]);
     } catch (err) {
@@ -111,9 +118,15 @@ const activityController = {
         location_id: json.location_id,
       });
       const result = await Activity.findOne({ where: { title: json.title } });
-      if (req.file) {
-        result.dataValues.photo = req.file.filename;
-      }
+      // if (req.file) {
+      //   result.dataValues.photo = req.file.filename;
+      // }
+
+      // Upload photo process
+      await Photo.create({
+        name: req.file.filename,
+        activity_id: result.dataValues.id,
+      });
       res.status(201).json({
         message: 'Activity successful created',
         activity: result,
@@ -139,6 +152,7 @@ const activityController = {
               },
               { where: { id: req.params.id } },
             );
+
             res.status(200).json({
               message: 'update successful',
             });
