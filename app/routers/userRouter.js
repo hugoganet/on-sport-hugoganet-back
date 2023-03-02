@@ -7,7 +7,7 @@ import { uploadFile } from '../middlewares/uploadPhoto.js';
 userRouter
   .route('/profil/:id')
   .get(userController.getProfil)
-  .put(uploadFile, userController.modifyProfil);
+  .patch(uploadFile, userController.modifyProfil);
 
 userRouter.route('/profil/:id/photo/:name').get(userController.getPhoto);
 export { userRouter };

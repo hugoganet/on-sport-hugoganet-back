@@ -67,7 +67,11 @@ const activityController = {
     try {
       const activity = await Activity.findOne({
         where: { id: activityRequest },
-        include: [{ model: Sport }, { model: Location }],
+        include: [
+          { model: Sport },
+          { model: Location },
+          { model: User, attributes: ['firstname'] },
+        ],
       });
       const activityDetail = {
         id: activity.id,
@@ -76,6 +80,8 @@ const activityController = {
         description: activity.description,
         family_tag: activity.family_tag,
         photo: activity.photo,
+        user_id: activity.user_id,
+        user_firstname: activity.User ? activity.User.firstname : null,
         sportID: activity.Sport.id,
         sportName: activity.Sport.name,
         location_id: activity.Location?.id,
