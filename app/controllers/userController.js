@@ -53,7 +53,7 @@ const userController = {
 
       // Ajouter les informations de localisation et les activités à l'objet utilisateur
       user.dataValues.locationName = location.name;
-      user.dataValues.locationPostCode = location.postcode;
+      user.dataValues.locationPostcode = location.postcode;
       user.dataValues.locationDepartment = location.department;
       user.dataValues.activitiesList = activitiesList;
 
