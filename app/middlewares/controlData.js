@@ -45,12 +45,13 @@ export const controlUnique = {
     const dataToControl = await Activity.findOne({
       where: { title: jsonAsString.title },
     });
-    // console.log('VALUE : ', req?.file.filename);
-    if (dataToControl?.dataValues && req?.file?.filename != undefined) {
-      unlink(`app/photos/${req.file?.filename}`, (err) => {
-        if (err) throw err;
-        console.log('path/file.txt was deleted');
-      });
+    if (dataToControl?.dataValues && req?.files != undefined) {
+      req?.files.forEach((file) =>
+        unlink(`app/photos/${file.filename}`, (err) => {
+          if (err) throw err;
+          console.log('path/file.txt was deleted');
+        }),
+      );
     }
     if (dataToControl?.dataValues) {
       return res.status(400).json({ Error: "Nom d'activité déjà existant" });

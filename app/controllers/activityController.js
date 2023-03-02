@@ -130,7 +130,7 @@ const activityController = {
     }
   },
   async createActivity(req, res) {
-    console.log('ICI :');
+    console.log(req.file, req?.files);
     const jsonAsString = JSON.parse(req.body.jsonAsString);
 
     try {
