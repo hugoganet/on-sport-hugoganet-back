@@ -24,29 +24,29 @@ export const controlUnique = {
     next();
   },
   async uniqueActivity(req, res, next) {
-    let json;
-    if (req.body?.json) {
-      json = JSON.parse(req.body?.json);
+    let jsonAsString;
+    if (req.body?.jsonAsString) {
+      jsonAsString = JSON.parse(req.body?.jsonAsString);
     }
 
     if (
-      json?.title === undefined ||
-      json?.sport_id === undefined ||
-      json?.user_id === undefined
+      jsonAsString?.title === undefined ||
+      jsonAsString?.sport_id === undefined ||
+      jsonAsString?.user_id === undefined
     ) {
-      if (req?.file?.filename)
-        unlink(`app/photos/${req?.file?.filename}`, (err) => {
-          if (err) throw err;
-          console.log('path/file.txt was deleted');
-        });
+      if (req?.file?.filename) console.log('ICI : ');
+      unlink(`app/photos/${req?.file?.filename}`, (err) => {
+        if (err) throw err;
+        console.log('path/file.txt was deleted');
+      });
       return res.status(400).json({ Error: 'Formulaire non complet' });
     }
 
     const dataToControl = await Activity.findOne({
-      where: { title: json.title },
+      where: { title: jsonAsString.title },
     });
-    console.log(dataToControl);
-    if (dataToControl?.dataValues && req?.filename != undefined) {
+    // console.log('VALUE : ', req?.file.filename);
+    if (dataToControl?.dataValues && req?.file?.filename != undefined) {
       unlink(`app/photos/${req.file?.filename}`, (err) => {
         if (err) throw err;
         console.log('path/file.txt was deleted');

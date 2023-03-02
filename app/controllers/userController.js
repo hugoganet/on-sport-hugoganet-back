@@ -34,12 +34,13 @@ const userController = {
           description: activity.description,
           family_tag: activity.family_tag,
           photo: activity.photo,
-          sportID: activity.Sport.id,
-          sportName: activity.Sport.name,
+
+          sportID: activity.Sport?.id,
+          sportName: activity.Sport?.name,
           location_id: activity.Location.id,
-          locationName: activity.Location.name,
-          locationPostcode: activity.Location.postcode,
-          locationDepartment: activity.Location.department,
+          locationName: activity.Location?.name,
+          locationPostcode: activity.Location?.postcode,
+          locationDepartment: activity.Location?.department,
         };
       });
 
@@ -48,7 +49,7 @@ const userController = {
         where: { user_id: userId },
       });
       if (userPhotoProfil) {
-        user.dataValues.photo = userPhotoProfil.dataValues.name;
+        user.dataValues.photo = userPhotoProfil.dataValues?.name;
       }
 
       // Ajouter les informations de localisation et les activités à l'objet utilisateur
