@@ -2,10 +2,12 @@ import { User } from '../models/User.js';
 import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
 import { Photo } from '../models/Photo.js';
+import { Location } from '../models/Location.js';
 import { sequelize } from '../dataSource/onSportSource.js';
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
 
+// Récupérer les informations de l'utilisateur et sa localisation
 const userController = {
   async getProfil(req, res) {
     const userId = req.params.id;
@@ -13,10 +15,17 @@ const userController = {
       const user = await User.findOne({
         where: { id: userId },
       });
+      const location = await Location.findOne({
+        where: { id: user.dataValues.location_id },
+      });
+
+      // Récupérer les activités de l'utilisateur
       const activities = await Activity.findAll({
         where: { user_id: userId },
-        include: { model: Sport },
+        include: [{ model: Sport }, { model: Location }],
       });
+
+      // Créer une liste d'activités en format simplifié
       const activitiesList = await activities.map((activity) => {
         return {
           id: activity.id,
@@ -25,12 +34,17 @@ const userController = {
           description: activity.description,
           family_tag: activity.family_tag,
           photo: activity.photo,
+
           sportID: activity.Sport?.id,
           sportName: activity.Sport?.name,
-          location_id: activity.location_id,
+          location_id: activity.Location.id,
+          locationName: activity.Location?.name,
+          locationPostcode: activity.Location?.postcode,
+          locationDepartment: activity.Location?.department,
         };
       });
 
+      // Récupérer la photo de profil de l'utilisateur et l'ajouter aux données de l'utilisateur
       const userPhotoProfil = await Photo.findOne({
         where: { user_id: userId },
       });
@@ -38,13 +52,20 @@ const userController = {
         user.dataValues.photo = userPhotoProfil.dataValues?.name;
       }
 
+      // Ajouter les informations de localisation et les activités à l'objet utilisateur
+      user.dataValues.locationName = location.name;
+      user.dataValues.locationPostcode = location.postcode;
+      user.dataValues.locationDepartment = location.department;
       user.dataValues.activitiesList = activitiesList;
+
+      // Supprimer le mot de passe de l'objet utilisateur avant de le renvoyer
       delete user.dataValues.password;
       res.status(200).json(user);
     } catch (err) {
       res.status(404).json({ message: err });
     }
   },
+
   async modifyProfil(req, res) {
     const jsonAsString = JSON.parse(req.body.jsonAsString);
 

@@ -1,6 +1,7 @@
 import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
 import { Location } from '../models/Location.js';
+import { User } from '../models/User.js';
 import { sequelize } from '../dataSource/onSportSource.js';
 
 import { Photo } from '../models/Photo.js';
@@ -13,33 +14,53 @@ const activityController = {
    */
   async getAllActivities(_req, res) {
     try {
-      const activity = await Activity.findAll({ include: { model: Sport } });
-      const result = await sequelize.query(`
-      SELECT 
-          a.id,a.title,a.note,
-          a.description,
-          a.family_tag,
-          a.photo,user_id,
-          u.firstname as user_firstname,
-          a.sport_id as "sportID",
-          s.name as "sportName",
-          a.location_id,
-          l.name as "locationName",
-          l.postcode as "locationPostcode",
-          l.department as "locationDepartment"
-      FROM activity a
-      LEFT JOIN "user" u
-      ON a.user_id = u.id
-      LEFT JOIN sport s
-      ON a.sport_id = s.id
-      LEFT JOIN location l
-      ON l.id = a.location_id;`);
-      activity.length > 0 && res.status(200).json(result[0]);
+      const activities = await Activity.findAll({
+        include: [
+          { model: Sport },
+          { model: User, attributes: ['firstname'] },
+          { model: Location, attributes: ['name', 'postcode', 'department'] },
+        ],
+        attributes: [
+          'id',
+          'title',
+          'note',
+          'description',
+          'family_tag',
+          'photo',
+          'user_id',
+          'sport_id',
+          'location_id',
+        ],
+      });
+      const activitiesList = activities.map((activity) => {
+        return {
+          id: activity.id,
+          title: activity.title,
+          note: activity.note,
+          description: activity.description,
+          family_tag: activity.family_tag,
+          photo: activity.photo,
+          user_id: activity.user_id,
+          user_firstname: activity.User ? activity.User.firstname : null,
+          sportID: activity.sport_id,
+          sportName: activity.Sport ? activity.Sport.name : null,
+          location_id: activity.location_id,
+          locationName: activity.Location ? activity.Location.name : null,
+          locationPostcode: activity.Location
+            ? activity.Location.postcode
+            : null,
+          locationDepartment: activity.Location
+            ? activity.Location.department
+            : null,
+        };
+      });
+      res.status(200).json(activitiesList);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
     }
   },
+
   async getActivityByID(req, res) {
     const activityRequest = req.params.id;
     console.log(activityRequest);
@@ -63,7 +84,7 @@ const activityController = {
         locationDepartment: activity.Location?.department,
       };
       activity.dataValues.activityDetail = activityDetail;
-      res.json(activityDetail);
+      res.status(200).json(activityDetail);
     } catch (err) {
       res.status(404).json({ message: 'Activity not found' });
     }
