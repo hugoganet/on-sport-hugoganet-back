@@ -25,8 +25,8 @@ const userController = {
           description: activity.description,
           family_tag: activity.family_tag,
           photo: activity.photo,
-          sportID: activity.Sport.id,
-          sportName: activity.Sport.name,
+          sportID: activity.Sport?.id,
+          sportName: activity.Sport?.name,
           location_id: activity.location_id,
         };
       });
@@ -35,7 +35,7 @@ const userController = {
         where: { user_id: userId },
       });
       if (userPhotoProfil) {
-        user.dataValues.photo = userPhotoProfil.dataValues.name;
+        user.dataValues.photo = userPhotoProfil.dataValues?.name;
       }
 
       user.dataValues.activitiesList = activitiesList;
