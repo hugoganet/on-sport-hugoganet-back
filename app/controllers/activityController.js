@@ -90,6 +90,15 @@ const activityController = {
         locationDepartment: activity.Location?.department,
       };
       activity.dataValues.activityDetail = activityDetail;
+
+      const activityPhoto = await Photo.findAll({
+        where: { activity_id: activityRequest },
+        attributes: ['name'],
+      });
+
+      if (activityPhoto) {
+        activityDetail.photos = activityPhoto;
+      }
       res.status(200).json(activityDetail);
     } catch (err) {
       res.status(404).json({ message: 'Activity not found' });
@@ -159,7 +168,7 @@ const activityController = {
           });
         }
       }
-      // result.dataValues.photos = photos;
+      result.dataValues.photos = photos;
       console.log('PHOTOS : ', photos);
       res.status(201).json({
         message: 'Activity successful created',
