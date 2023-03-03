@@ -130,8 +130,11 @@ const activityController = {
     }
   },
   async createActivity(req, res) {
-    console.log(req.file, req?.files);
-    const jsonAsString = JSON.parse(req.body.jsonAsString);
+    let jsonAsString;
+    let photos = {};
+    if (req.body?.jsonAsString) {
+      jsonAsString = JSON.parse(req.body.jsonAsString);
+    }
 
     try {
       await Activity.create({
@@ -146,15 +149,21 @@ const activityController = {
       const result = await Activity.findOne({
         where: { title: jsonAsString.title },
       });
-      if (req?.file) {
-        result.dataValues.photo = req.file?.filename;
+
+      if (req?.files) {
+        // req?.files.forEach((file) => console.log(file.filename));
+        for (let i = 0; i < req?.files.length; i++) {
+          photos[i] = req.files[i].filename;
+        }
+        // result.dataValues.photo = req.files.file?.filename;
         // Upload photo process
-        await Photo.create({
-          name: req.file.filename,
-          activity_id: result.dataValues.id,
-        });
+        // await Photo.create({
+        //   name: req.file.filename,
+        //   activity_id: result.dataValues.id,
+        // });
       }
 
+      console.log('PHOTOS : ', photos);
       res.status(201).json({
         message: 'Activity successful created',
         activity: result,
