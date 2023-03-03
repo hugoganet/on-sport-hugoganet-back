@@ -149,20 +149,17 @@ const activityController = {
       const result = await Activity.findOne({
         where: { title: jsonAsString.title },
       });
-
+      // Process to add files in BDD and build object photos to response
       if (req?.files) {
-        // req?.files.forEach((file) => console.log(file.filename));
         for (let i = 0; i < req?.files.length; i++) {
           photos[i] = req.files[i].filename;
+          await Photo.create({
+            name: req.files[i].filename,
+            activity_id: result.dataValues.id,
+          });
         }
-        // result.dataValues.photo = req.files.file?.filename;
-        // Upload photo process
-        // await Photo.create({
-        //   name: req.file.filename,
-        //   activity_id: result.dataValues.id,
-        // });
       }
-
+      // result.dataValues.photos = photos;
       console.log('PHOTOS : ', photos);
       res.status(201).json({
         message: 'Activity successful created',
