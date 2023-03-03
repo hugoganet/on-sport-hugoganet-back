@@ -39,7 +39,24 @@ const locationController = {
       const cities = await Location.findAll({
         where: {
           name: {
-            [Op.iLike]: `%${search}%`,
+            [Op.iLike]: `${search}%`,
+          },
+        },
+        limit: 10,
+      });
+      res.json(cities);
+    } catch (error) {
+      console.trace(error);
+      res.status(500).json(error);
+    }
+  },
+  async queryLocationByName(req, res) {
+    const { search } = req.query;
+    try {
+      const cities = await Location.findAll({
+        where: {
+          name: {
+            [Op.iLike]: `${search}%`,
           },
         },
         limit: 10,
