@@ -48,6 +48,7 @@ const userController = {
       const userPhotoProfil = await Photo.findOne({
         where: { user_id: userId },
       });
+      console.log(userPhotoProfil);
       if (userPhotoProfil) {
         user.dataValues.photo = userPhotoProfil.dataValues?.name;
       }
@@ -57,7 +58,16 @@ const userController = {
       user.dataValues.locationPostcode = location?.postcode;
       user.dataValues.locationDepartment = location?.department;
       user.dataValues.activitiesList = activitiesList;
+      //
+      const profilPhoto = await Photo.findAll({
+        where: { user_id: userId },
+        attributes: ['name'],
+      });
 
+      if (profilPhoto) {
+        user.photos = profilPhoto;
+      }
+      //
       // Supprimer le mot de passe de l'objet utilisateur avant de le renvoyer
       delete user.dataValues.password;
       res.status(200).json(user);
@@ -93,12 +103,23 @@ const userController = {
         { where: { id: userId } },
       );
       const updateInfoProfil = await User.findOne({ where: { id: userId } });
+      let photos = {};
       // Upload photo process
-      if (req?.file) {
-        await Photo.create({
-          name: req.file?.filename,
-          user_id: userId,
-        });
+      // if (req?.files) {
+
+      //   await Photo.create({
+      //     name: req.file?.filename,
+      //     user_id: userId,
+      //   });
+      // }
+      if (req?.files) {
+        for (let i = 0; i < req?.files.length; i++) {
+          photos[i] = req.files[i].filename;
+          await Photo.create({
+            name: req.files[i].filename,
+            user_id: userId,
+          });
+        }
       }
       delete updateInfoProfil.dataValues.password;
       res.status(200).json(updateInfoProfil);
