@@ -49,10 +49,12 @@ const authController = {
     }
   },
   async signin(req, res) {
-    console.log(req.body);
     const { login, password } = req.body;
     const currentUser = await User.findOne({ where: { login } });
     //console.log(currentUser?.dataValues?.firstname);
+    if (!currentUser) {
+      return res.status(401).json('not authorized');
+    }
     try {
       const decryptPassword = await bcrypt.compare(
         password,
