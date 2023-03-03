@@ -30,11 +30,10 @@ const userController = {
         return {
           id: activity.id,
           title: activity.title,
-          note: activity.note,
-          description: activity.description,
-          family_tag: activity.family_tag,
-          photo: activity.photo,
-
+          note: activity?.note,
+          description: activity?.description,
+          family_tag: activity?.family_tag,
+          photo: activity?.photo,
           sportID: activity.Sport?.id,
           sportName: activity.Sport?.name,
           location_id: activity.Location.id,
@@ -53,9 +52,9 @@ const userController = {
       }
 
       // Ajouter les informations de localisation et les activités à l'objet utilisateur
-      user.dataValues.locationName = location.name;
-      user.dataValues.locationPostcode = location.postcode;
-      user.dataValues.locationDepartment = location.department;
+      user.dataValues.locationName = location?.name;
+      user.dataValues.locationPostcode = location?.postcode;
+      user.dataValues.locationDepartment = location?.department;
       user.dataValues.activitiesList = activitiesList;
 
       // Supprimer le mot de passe de l'objet utilisateur avant de le renvoyer
