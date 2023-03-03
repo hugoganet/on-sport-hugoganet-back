@@ -5,6 +5,7 @@ import { Photo } from '../models/Photo.js';
 import { Location } from '../models/Location.js';
 import { sequelize } from '../dataSource/onSportSource.js';
 import bcrypt from 'bcrypt';
+import { where } from 'sequelize';
 const saltRounds = 10;
 
 // Récupérer les informations de l'utilisateur et sa localisation
@@ -34,10 +35,9 @@ const userController = {
           description: activity.description,
           family_tag: activity.family_tag,
           photo: activity.photo,
-
           sportID: activity.Sport?.id,
           sportName: activity.Sport?.name,
-          location_id: activity.Location.id,
+          location_id: activity.Location?.id,
           locationName: activity.Location?.name,
           locationPostcode: activity.Location?.postcode,
           locationDepartment: activity.Location?.department,
@@ -67,28 +67,32 @@ const userController = {
   },
 
   async modifyProfil(req, res) {
-    const jsonAsString = JSON.parse(req.body.jsonAsString);
+    let jsonAsString;
+    if (req.body?.jsonAsString) {
+      jsonAsString = JSON.parse(req.body.jsonAsString);
+    }
 
     const userId = req.params.id;
     let hashPassword;
-    if (jsonAsString.password) {
+    if (jsonAsString?.password) {
       hashPassword = await bcrypt.hash(jsonAsString.password, saltRounds);
     }
 
     try {
-      const newProfil = await sequelize.query(
-        `UPDATE "user" SET
-              firstname = '${jsonAsString.firstname}',
-              lastname = '${jsonAsString.lastname}',
-              email = '${jsonAsString.email}',
-              login = '${jsonAsString.login}',
-              age = '${jsonAsString.age}',
-              bio = '${jsonAsString.bio}',
-              location_id = ${jsonAsString.location_id},
-              password = '${hashPassword}'
-          WHERE id=${userId}
-          RETURNING id,firstname,lastname,email,login,age,bio,location_id`,
+      await User.update(
+        {
+          firstname: jsonAsString?.firstname,
+          lastname: jsonAsString?.lastname,
+          email: jsonAsString?.email,
+          login: jsonAsString?.login,
+          age: jsonAsString?.age,
+          bio: jsonAsString?.bio,
+          location_id: jsonAsString?.location_id,
+          password: jsonAsString?.password,
+        },
+        { where: { id: userId } },
       );
+      const updateInfoProfil = await User.findOne({ where: { id: userId } });
       // Upload photo process
       if (req?.file) {
         await Photo.create({
@@ -96,10 +100,9 @@ const userController = {
           user_id: userId,
         });
       }
-
-      res.status(200).json(newProfil[0][0]);
+      delete updateInfoProfil.dataValues.password;
+      res.status(200).json(updateInfoProfil);
     } catch (err) {
-      //console.log('START ', err.errors[0].message);
       res.status(400).json({ error: err.errors[0].message });
       // console.log(err);
     }

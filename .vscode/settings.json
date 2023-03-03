@@ -18,6 +18,15 @@
       "name": "Onsport",
       "database": "onsport",
       "username": "postgres"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "onsport",
+      "database": "onsport",
+      "username": "onsport"
     }
   ]
 }
