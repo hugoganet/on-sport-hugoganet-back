@@ -126,11 +126,11 @@ const activityController = {
           family_tag: activity.family_tag,
           photo: activity.photo,
           sportID: activity.Sport.id,
-          sportName: activity.Sport.name,
-          location_id: activity.Location.id,
-          locationName: activity.Location.name,
-          locationPostcode: activity.Location.postcode,
-          locationDepartment: activity.Location.department,
+          sportName: activity.Sport?.name,
+          location_id: activity.Location?.id,
+          locationName: activity.Location?.name,
+          locationPostcode: activity.Location?.postcode,
+          locationDepartment: activity.Location?.department,
         };
       });
       res.json(activitiesDetails);
