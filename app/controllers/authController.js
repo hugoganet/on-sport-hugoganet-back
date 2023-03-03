@@ -52,26 +52,27 @@ const authController = {
     const { login, password } = req.body;
     const currentUser = await User.findOne({ where: { login } });
     //console.log(currentUser?.dataValues?.firstname);
+    if (!currentUser) {
+      return res.status(401).json('not authorized');
+    }
     try {
       const decryptPassword = await bcrypt.compare(
         password,
-        currentUser.password,
+        currentUser?.password,
       );
 
       // vérification correspondance login et mdp input et base
-      if (currentUser.login !== login || decryptPassword == false) {
+      if (currentUser?.login !== login || decryptPassword == false) {
         return res.status(401).json('not authorized');
       }
       const tokenUser = await tokenController.genToken({ login });
-      res
-        .status(200)
-        .json({
-          tokenUser,
-          username: currentUser?.dataValues?.login,
-          id: currentUser?.dataValues?.id,
-        });
+      res.status(200).json({
+        tokenUser,
+        username: currentUser?.dataValues?.login,
+        id: currentUser?.dataValues?.id,
+      });
     } catch (err) {
-      console.log(err);
+      //console.log(err);
       return res.status(500).json(err);
     }
   },

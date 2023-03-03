@@ -90,6 +90,15 @@ const activityController = {
         locationDepartment: activity.Location?.department,
       };
       activity.dataValues.activityDetail = activityDetail;
+
+      const activityPhoto = await Photo.findAll({
+        where: { activity_id: activityRequest },
+        attributes: ['name'],
+      });
+
+      if (activityPhoto) {
+        activityDetail.photos = activityPhoto;
+      }
       res.status(200).json(activityDetail);
     } catch (err) {
       res.status(404).json({ message: 'Activity not found' });
@@ -117,11 +126,11 @@ const activityController = {
           family_tag: activity.family_tag,
           photo: activity.photo,
           sportID: activity.Sport.id,
-          sportName: activity.Sport.name,
-          location_id: activity.Location.id,
-          locationName: activity.Location.name,
-          locationPostcode: activity.Location.postcode,
-          locationDepartment: activity.Location.department,
+          sportName: activity.Sport?.name,
+          location_id: activity.Location?.id,
+          locationName: activity.Location?.name,
+          locationPostcode: activity.Location?.postcode,
+          locationDepartment: activity.Location?.department,
         };
       });
       res.json(activitiesDetails);
@@ -130,8 +139,11 @@ const activityController = {
     }
   },
   async createActivity(req, res) {
-    console.log('ICI :');
-    const jsonAsString = JSON.parse(req.body.jsonAsString);
+    let jsonAsString;
+    let photos = {};
+    if (req.body?.jsonAsString) {
+      jsonAsString = JSON.parse(req.body.jsonAsString);
+    }
 
     try {
       await Activity.create({
@@ -146,15 +158,18 @@ const activityController = {
       const result = await Activity.findOne({
         where: { title: jsonAsString.title },
       });
-      if (req?.file) {
-        result.dataValues.photo = req.file?.filename;
-        // Upload photo process
-        await Photo.create({
-          name: req.file.filename,
-          activity_id: result.dataValues.id,
-        });
+      // Process to add files in BDD and build object photos to response
+      if (req?.files) {
+        for (let i = 0; i < req?.files.length; i++) {
+          photos[i] = req.files[i].filename;
+          await Photo.create({
+            name: req.files[i].filename,
+            activity_id: result.dataValues.id,
+          });
+        }
       }
-
+      result.dataValues.photos = photos;
+      console.log('PHOTOS : ', photos);
       res.status(201).json({
         message: 'Activity successful created',
         activity: result,
