@@ -15,7 +15,5 @@ userRouter
     userController.modifyProfil,
   );
 
-userRouter
-  .route('/profil/:id/photo/:name')
-  .get(controlSyntaxMiddleware.syntaxTypeControl, userController.getPhoto);
+userRouter.route('/profil/:id/photo/:name').get(userController.getPhoto);
 export { userRouter };
