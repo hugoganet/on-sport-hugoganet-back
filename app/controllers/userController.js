@@ -3,9 +3,7 @@ import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
 import { Photo } from '../models/Photo.js';
 import { Location } from '../models/Location.js';
-import { sequelize } from '../dataSource/onSportSource.js';
 import bcrypt from 'bcrypt';
-import { where } from 'sequelize';
 const saltRounds = 10;
 
 // Récupérer les informations de l'utilisateur et sa localisation
@@ -113,6 +111,22 @@ const userController = {
       //   });
       // }
       if (req?.files) {
+        // Récupération name photo en BDD
+        const userHasPhoto = await Photo.findOne({ user_id: userId });
+        if (userHasPhoto) {
+          console.log(userHasPhoto);
+          // Supression du fichier physique.
+          // Supression de l'entrée du fichier en base de données.
+          // if (dataToControl?.dataValues && req?.files != undefined) {
+          // req?.files.forEach((file) =>
+          //   unlink(`app/photos/${file.filename}`, (err) => {
+          //     if (err) throw err;
+          //     console.log('path/file.txt was deleted');
+          //   }),
+          // );
+          // }
+        }
+        // Ajout du nom de la photo en BDD en lien avec le user_id
         for (let i = 0; i < req?.files.length; i++) {
           photos[i] = req.files[i].filename;
           await Photo.create({
@@ -124,8 +138,9 @@ const userController = {
       delete updateInfoProfil.dataValues.password;
       res.status(200).json(updateInfoProfil);
     } catch (err) {
-      res.status(400).json({ error: err.errors[0].message });
-      // console.log(err);
+      // const error = err?.errors[0]?.message;
+      // res.status(400).json(error);
+      console.log(err);
     }
   },
   async getPhoto(req, res) {

@@ -15,6 +15,33 @@ export const controlUnique = {
     }
     next();
   },
+  async uniqueProfil(req, res, next) {
+    let jsonAsString;
+    if (req.body?.jsonAsString) {
+      jsonAsString = JSON.parse(req.body?.jsonAsString);
+    }
+    const loginToControl = await User.findOne({
+      where: { login: jsonAsString.login },
+    });
+    const emailToControl = await User.findOne({
+      where: { email: jsonAsString.email },
+    });
+    if (loginToControl) {
+      return res.status(400).json({ Error: 'Ce login existe déjà' });
+    }
+    if (emailToControl) {
+      return res.status(400).json({ Error: 'Cet Email existe déjà' });
+    }
+    if (req?.files) {
+      const userId = req.body;
+      const userPhotoProfil = Photo.findOne({ user_id: userId });
+      console.log(userPhotoProfil);
+      // if(userPhotoProfil){
+
+      // }
+    }
+    next();
+  },
   async loginNotEmpty(req, res, next) {
     const { login, password } = req.body;
 
