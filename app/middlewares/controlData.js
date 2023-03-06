@@ -1,6 +1,7 @@
 import { User } from '../models/User.js';
 import { Activity } from '../models/Activity.js';
 import { unlink } from 'node:fs';
+import { Photo } from '../models/Photo.js';
 export const controlUnique = {
   async uniqueUser(req, res, next) {
     const { login, password } = req.body;
@@ -14,6 +15,46 @@ export const controlUnique = {
       return res.status(400).json({ Error: 'Utilisateur existe déjà' });
     }
     next();
+  },
+  async uniqueProfil(req, res, next) {
+    try {
+      const userId = req.params.id;
+      let jsonAsString;
+      if (req.body?.jsonAsString) {
+        jsonAsString = JSON.parse(req.body?.jsonAsString);
+      }
+      const loginToControl = await User.findOne({
+        where: { login: jsonAsString.login },
+      });
+      const emailToControl = await User.findOne({
+        where: { email: jsonAsString.email },
+      });
+      // controle de l'unicité login et email en BDD.
+      if (loginToControl && loginToControl.id != userId) {
+        return res.status(400).json({ Error: 'Ce login existe déjà' });
+      }
+      if (emailToControl && emailToControl.id != userId) {
+        return res.status(400).json({ Error: 'Cet Email existe déjà' });
+      }
+      if (req?.files) {
+        const userPhotoProfil = await Photo.findOne({
+          where: { user_id: userId },
+          attributes: ['name'],
+        });
+        // Suppression du fichier sur le serveur
+        if (userPhotoProfil) {
+          unlink(`app/photos/${userPhotoProfil?.name}`, (err) => {
+            if (err) throw err;
+            console.log('path/file.txt was deleted');
+          });
+          await Photo.destroy({ where: { user_id: userId } });
+        }
+      }
+      next();
+    } catch (err) {
+      res.status(500).json(err);
+      // console.log(err);
+    }
   },
   async loginNotEmpty(req, res, next) {
     const { login, password } = req.body;
