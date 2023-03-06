@@ -17,31 +17,40 @@ export const controlUnique = {
     next();
   },
   async uniqueProfil(req, res, next) {
-    let jsonAsString;
-    if (req.body?.jsonAsString) {
-      jsonAsString = JSON.parse(req.body?.jsonAsString);
-    }
-    const loginToControl = await User.findOne({
-      where: { login: jsonAsString.login },
-    });
-    const emailToControl = await User.findOne({
-      where: { email: jsonAsString.email },
-    });
-    if (loginToControl) {
-      return res.status(400).json({ Error: 'Ce login existe déjà' });
-    }
-    if (emailToControl) {
-      return res.status(400).json({ Error: 'Cet Email existe déjà' });
-    }
-    if (req?.files) {
+    try {
       const userId = req.params.id;
-      const userPhotoProfil = await Photo.findOne({ user_id: userId });
-      // console.log(userPhotoProfil);
-      if (userPhotoProfil) {
-        await Photo.destroy({ where: { user_id: userId } });
+      let jsonAsString;
+      if (req.body?.jsonAsString) {
+        jsonAsString = JSON.parse(req.body?.jsonAsString);
       }
+      const loginToControl = await User.findOne({
+        where: { login: jsonAsString.login },
+      });
+      const emailToControl = await User.findOne({
+        where: { email: jsonAsString.email },
+      });
+      // controle de l'unicité login et email en BDD.
+      if (loginToControl && loginToControl.id != userId) {
+        return res.status(400).json({ Error: 'Ce login existe déjà' });
+      }
+      if (emailToControl && emailToControl.id != userId) {
+        return res.status(400).json({ Error: 'Cet Email existe déjà' });
+      }
+      if (req?.files) {
+        const userPhotoProfil = await Photo.findOne({
+          where: { user_id: userId },
+          attributes: ['name'],
+        });
+
+        if (userPhotoProfil) {
+          await Photo.destroy({ where: { user_id: userId } });
+        }
+      }
+      next();
+    } catch (err) {
+      res.status(500).json(err);
+      // console.log(err);
     }
-    next();
   },
   async loginNotEmpty(req, res, next) {
     const { login, password } = req.body;

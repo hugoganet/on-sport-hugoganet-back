@@ -112,20 +112,7 @@ const userController = {
       // }
       if (req?.files) {
         // Récupération name photo en BDD
-        const userHasPhoto = await Photo.findOne({ user_id: userId });
-        if (userHasPhoto) {
-          console.log(userHasPhoto);
-          // Supression du fichier physique.
-          // Supression de l'entrée du fichier en base de données.
-          // if (dataToControl?.dataValues && req?.files != undefined) {
-          // req?.files.forEach((file) =>
-          //   unlink(`app/photos/${file.filename}`, (err) => {
-          //     if (err) throw err;
-          //     console.log('path/file.txt was deleted');
-          //   }),
-          // );
-          // }
-        }
+
         // Ajout du nom de la photo en BDD en lien avec le user_id
         for (let i = 0; i < req?.files.length; i++) {
           photos[i] = req.files[i].filename;
