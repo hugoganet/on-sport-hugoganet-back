@@ -41,7 +41,7 @@ export const controlUnique = {
           where: { user_id: userId },
           attributes: ['name'],
         });
-
+        // Suppression du fichier sur le serveur
         if (userPhotoProfil) {
           unlink(`app/photos/${userPhotoProfil?.name}`, (err) => {
             if (err) throw err;
