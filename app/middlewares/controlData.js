@@ -43,6 +43,10 @@ export const controlUnique = {
         });
 
         if (userPhotoProfil) {
+          unlink(`app/photos/${userPhotoProfil?.name}`, (err) => {
+            if (err) throw err;
+            console.log('path/file.txt was deleted');
+          });
           await Photo.destroy({ where: { user_id: userId } });
         }
       }
