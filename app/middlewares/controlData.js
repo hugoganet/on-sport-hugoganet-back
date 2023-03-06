@@ -1,6 +1,7 @@
 import { User } from '../models/User.js';
 import { Activity } from '../models/Activity.js';
 import { unlink } from 'node:fs';
+import { Photo } from '../models/Photo.js';
 export const controlUnique = {
   async uniqueUser(req, res, next) {
     const { login, password } = req.body;
@@ -33,12 +34,12 @@ export const controlUnique = {
       return res.status(400).json({ Error: 'Cet Email existe déjà' });
     }
     if (req?.files) {
-      const userId = req.body;
-      const userPhotoProfil = Photo.findOne({ user_id: userId });
-      console.log(userPhotoProfil);
-      // if(userPhotoProfil){
-
-      // }
+      const userId = req.params.id;
+      const userPhotoProfil = await Photo.findOne({ user_id: userId });
+      // console.log(userPhotoProfil);
+      if (userPhotoProfil) {
+        await Photo.destroy({ where: { user_id: userId } });
+      }
     }
     next();
   },
