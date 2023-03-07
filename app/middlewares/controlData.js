@@ -2,6 +2,7 @@ import { User } from '../models/User.js';
 import { Activity } from '../models/Activity.js';
 import { unlink } from 'node:fs';
 import { Photo } from '../models/Photo.js';
+
 export const controlUnique = {
   async uniqueUser(req, res, next) {
     const { login, password } = req.body;

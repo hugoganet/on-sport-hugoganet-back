@@ -118,14 +118,8 @@ const userController = {
       delete updateInfoProfil.dataValues.password;
       res.status(200).json(updateInfoProfil);
     } catch (err) {
-<<<<<<< HEAD
-      // const error = err?.errors[0]?.message;
-      // res.status(400).json(error);
-      console.log(err);
-=======
       res.status(400).json(err);
       // console.log(err);
->>>>>>> develop
     }
   },
   async getPhoto(req, res) {

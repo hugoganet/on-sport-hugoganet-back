@@ -2,8 +2,6 @@ import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
 import { Location } from '../models/Location.js';
 import { User } from '../models/User.js';
-import { sequelize } from '../dataSource/onSportSource.js';
-
 import { Photo } from '../models/Photo.js';
 
 const activityController = {

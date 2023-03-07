@@ -1,6 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../dataSource/onSportSource.js';
-import { User } from './User.js';
 
 export class Location extends Model {}
 
