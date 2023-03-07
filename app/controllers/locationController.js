@@ -1,4 +1,3 @@
-import { sequelize } from '../dataSource/onSportSource.js';
 import { Location } from '../models/Location.js';
 import { Op } from 'sequelize';
 

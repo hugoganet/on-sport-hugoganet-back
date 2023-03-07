@@ -1,5 +1,4 @@
 import { Model, DataTypes } from 'sequelize';
-
 import { sequelize } from '../dataSource/onSportSource.js';
 import { Sport } from './Sport.js';
 import { Location } from './Location.js';
