@@ -95,14 +95,7 @@ const userController = {
       );
       const updateInfoProfil = await User.findOne({ where: { id: userId } });
       let photos = {};
-      // Upload photo process
-      // if (req?.files) {
 
-      //   await Photo.create({
-      //     name: req.file?.filename,
-      //     user_id: userId,
-      //   });
-      // }
       if (req?.files) {
         // Récupération name photo en BDD
 

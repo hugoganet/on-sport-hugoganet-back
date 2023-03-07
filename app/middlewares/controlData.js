@@ -24,18 +24,22 @@ export const controlUnique = {
       if (req.body?.jsonAsString) {
         jsonAsString = JSON.parse(req.body?.jsonAsString);
       }
-      const loginToControl = await User.findOne({
-        where: { login: jsonAsString.login },
-      });
-      const emailToControl = await User.findOne({
-        where: { email: jsonAsString.email },
-      });
-      // controle de l'unicité login et email en BDD.
-      if (loginToControl && loginToControl.id != userId) {
-        return res.status(400).json({ Error: 'Ce login existe déjà' });
+      if (jsonAsString?.login) {
+        const loginToControl = await User.findOne({
+          where: { login: jsonAsString?.login },
+        });
+        if (loginToControl && loginToControl.id != userId) {
+          return res.status(400).json({ Error: 'Ce login existe déjà' });
+        }
       }
-      if (emailToControl && emailToControl.id != userId) {
-        return res.status(400).json({ Error: 'Cet Email existe déjà' });
+      if (jsonAsString?.email) {
+        const emailToControl = await User.findOne({
+          where: { email: jsonAsString?.email },
+        });
+        // controle de l'unicité login et email en BDD.
+        if (emailToControl && emailToControl.id != userId) {
+          return res.status(400).json({ Error: 'Cet Email existe déjà' });
+        }
       }
       if (req?.files) {
         const userPhotoProfil = await Photo.findOne({
@@ -54,7 +58,7 @@ export const controlUnique = {
       next();
     } catch (err) {
       res.status(500).json(err);
-      // console.log(err);
+      console.log(err);
     }
   },
   async loginNotEmpty(req, res, next) {
