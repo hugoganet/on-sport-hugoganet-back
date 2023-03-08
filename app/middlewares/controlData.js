@@ -41,7 +41,8 @@ export const controlUnique = {
           return res.status(400).json({ Error: 'Cet Email existe déjà' });
         }
       }
-      if (req?.files) {
+
+      if (req?.files?.length > 0) {
         const userPhotoProfil = await Photo.findOne({
           where: { user_id: userId },
           attributes: ['name'],
