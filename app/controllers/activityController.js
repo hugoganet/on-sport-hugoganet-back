@@ -3,6 +3,7 @@ import { Sport } from '../models/Sport.js';
 import { Location } from '../models/Location.js';
 import { User } from '../models/User.js';
 import { Photo } from '../models/Photo.js';
+import { sequelize } from '../dataSource/onSportSource.js';
 
 const activityController = {
   /**
@@ -61,8 +62,14 @@ const activityController = {
 
   async getActivityByID(req, res) {
     const activityRequest = req.params.id;
-    console.log(activityRequest);
+
     try {
+      const moyenne = await sequelize.query(`
+      SELECT activity_id,AVG(activity_note)::numeric(10,1) as activity_note
+      FROM comment
+      WHERE activity_id=${activityRequest}
+      GROUP BY activity_id`);
+
       const activity = await Activity.findOne({
         where: { id: activityRequest },
         include: [
@@ -74,12 +81,12 @@ const activityController = {
       const activityDetail = {
         id: activity.id,
         title: activity.title,
-        note: activity.note,
+        note: moyenne[0][0]?.activity_note || null,
         description: activity.description,
         family_tag: activity.family_tag,
         photo: activity.photo,
         user_id: activity.user_id,
-        user_firstname: activity.User ? activity.User.firstname : null,
+        user_firstname: activity.User?.firstname || null,
         sportID: activity.Sport.id,
         sportName: activity.Sport.name,
         location_id: activity.Location?.id,
@@ -97,9 +104,11 @@ const activityController = {
       if (activityPhoto) {
         activityDetail.photos = activityPhoto;
       }
+
       res.status(200).json(activityDetail);
     } catch (err) {
       res.status(404).json({ message: 'Activity not found' });
+      console.log(err);
     }
   },
   /**

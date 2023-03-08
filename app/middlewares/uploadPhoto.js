@@ -1,5 +1,5 @@
 import multer from 'multer';
-const maxSize = 10 * 1024 * 1024;
+const maxSize = 20 * 1024 * 1024;
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

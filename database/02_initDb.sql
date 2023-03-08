@@ -1,29 +1,28 @@
 BEGIN;
-
-DROP TABLE IF EXISTS "sport","activity","photo","comment","user","location","user_has_sport";
-
-CREATE TABLE "sport"
-(
-	"id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	"name" TEXT NOT NULL UNIQUE,
+DROP TABLE IF EXISTS "sport",
+"activity",
+"photo",
+"comment",
+"user",
+"location",
+"user_has_sport";
+CREATE TABLE "sport" (
+    "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "name" TEXT NOT NULL UNIQUE,
     "created_at" timestamptz DEFAULT NOW(),
     "updated_at" timestamptz
 );
-
 CREATE TABLE "location" (
-  "id" integer GENERATED ALWAYS AS IDENTITY,
-  "name" VARCHAR(255) NOT NULL,
-  "postcode" VARCHAR(255) NOT NULL,
-  "department" VARCHAR(255) NOT NULL,
+    "id" integer GENERATED ALWAYS AS IDENTITY,
+    "name" VARCHAR(255) NOT NULL,
+    "postcode" VARCHAR(255) NOT NULL,
+    "department" VARCHAR(255) NOT NULL,
     "created_at" timestamptz DEFAULT NOW(),
     "updated_at" timestamptz,
-  PRIMARY KEY (id),
-		UNIQUE(name,department)
+    PRIMARY KEY (id),
+    UNIQUE(name, department)
 );
-
-
-CREATE TABLE "user"
-(
+CREATE TABLE "user" (
     "id" integer GENERATED ALWAYS AS IDENTITY,
     "firstname" text NOT NULL,
     "lastname" text NOT NULL,
@@ -31,20 +30,14 @@ CREATE TABLE "user"
     "password" text NOT NULL,
     "age" date,
     "bio" text,
-	"email" text NOT NULL UNIQUE,
+    "email" text NOT NULL UNIQUE,
     "location_id" integer,
     "created_at" timestamptz DEFAULT NOW(),
     "updated_at" timestamptz,
     PRIMARY KEY (id),
-    CONSTRAINT "Location_ID" FOREIGN KEY (location_id)
-        REFERENCES location (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID
+    CONSTRAINT "Location_ID" FOREIGN KEY (location_id) REFERENCES location (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION NOT VALID
 );
-
-CREATE TABLE "activity"
-(
+CREATE TABLE "activity" (
     "id" integer GENERATED ALWAYS AS IDENTITY,
     "title" text NOT NULL UNIQUE,
     "note" integer,
@@ -57,46 +50,22 @@ CREATE TABLE "activity"
     "created_at" timestamptz DEFAULT NOW(),
     "updated_at" timestamptz,
     PRIMARY KEY (id),
-    CONSTRAINT sport_id FOREIGN KEY (sport_id)
-        REFERENCES "sport" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT user_id FOREIGN KEY (user_id)
-        REFERENCES "user" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT "location_id" FOREIGN KEY (location_id)
-        REFERENCES "location" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID
+    CONSTRAINT sport_id FOREIGN KEY (sport_id) REFERENCES "sport" (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION NOT VALID,
+    CONSTRAINT user_id FOREIGN KEY (user_id) REFERENCES "user" (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION NOT VALID,
+    CONSTRAINT "location_id" FOREIGN KEY (location_id) REFERENCES "location" (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION NOT VALID
 );
-
-CREATE TABLE "photo"
-(
+CREATE TABLE "photo" (
     "id" integer GENERATED ALWAYS AS IDENTITY,
     "name" text NOT NULL,
-    "user_id" integer ,
-    "activity_id" integer ,
+    "user_id" integer,
+    "activity_id" integer,
     "created_at" timestamptz DEFAULT NOW(),
     "updated_at" timestamptz,
     PRIMARY KEY (id),
-    CONSTRAINT user_id FOREIGN KEY (user_id)
-        REFERENCES "user" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT "activity_id" FOREIGN KEY (activity_id)
-        REFERENCES "activity" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID
+    CONSTRAINT user_id FOREIGN KEY (user_id) REFERENCES "user" (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION NOT VALID,
+    CONSTRAINT "activity_id" FOREIGN KEY (activity_id) REFERENCES "activity" (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION NOT VALID
 );
-
-CREATE TABLE "comment"
-(
+CREATE TABLE "comment" (
     "id" integer GENERATED ALWAYS AS IDENTITY,
     "content" text NOT NULL,
     "activity_note" integer,
@@ -105,36 +74,22 @@ CREATE TABLE "comment"
     "created_at" timestamptz DEFAULT NOW(),
     "updated_at" timestamptz,
     PRIMARY KEY (id),
-    CONSTRAINT user_id FOREIGN KEY (user_id)
-        REFERENCES "user" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT "activity_id" FOREIGN KEY (activity_id)
-        REFERENCES "activity" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE CASCADE
-        NOT VALID
+    CONSTRAINT user_id FOREIGN KEY (user_id) REFERENCES "user" (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION NOT VALID,
+    CONSTRAINT "activity_id" FOREIGN KEY (activity_id) REFERENCES "activity" (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE CASCADE NOT VALID
 );
-
-CREATE TABLE "user_has_sport"
-(
+CREATE TABLE "user_has_sport" (
     "id" integer GENERATED ALWAYS AS IDENTITY,
     "user_id" integer NOT NULL,
     "sport_id" integer NOT NULL,
     "created_at" timestamptz DEFAULT NOW(),
     "updated_at" timestamptz,
     PRIMARY KEY (id),
-    CONSTRAINT "user_id" FOREIGN KEY (user_id)
-        REFERENCES "user" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT "sport_id" FOREIGN KEY (sport_id)
-        REFERENCES "sport" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID
+    CONSTRAINT "user_id" FOREIGN KEY (user_id) REFERENCES "user" (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION NOT VALID,
+    CONSTRAINT "sport_id" FOREIGN KEY (sport_id) REFERENCES "sport" (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION NOT VALID
 );
-
+CREATE OR REPLACE VIEW "avg_note" AS
+select activity_id,
+    AVG(activity_note)::numeric(10, 1) as activity_note
+from comment
+group by activity_id;
 COMMIT;
