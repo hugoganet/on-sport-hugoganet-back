@@ -69,7 +69,6 @@ const activityController = {
       FROM comment
       WHERE activity_id=${activityRequest}
       GROUP BY activity_id`);
-      // console.log(moyenne[0][0]?.activity_note);
 
       const activity = await Activity.findOne({
         where: { id: activityRequest },
