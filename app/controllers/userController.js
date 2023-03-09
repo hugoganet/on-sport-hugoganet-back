@@ -163,8 +163,10 @@ const userController = {
       }
       // Anonimisation du user en base de données
       await User.update(anonimousUser, { where: { id: userId } });
+      res.status(200).json({ info: `User ${userId} rendu inactif` });
     } catch (err) {
       console.log(err);
+      res.status(500).json(err);
     }
   },
 };
