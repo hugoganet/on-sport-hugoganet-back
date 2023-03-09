@@ -135,19 +135,36 @@ const userController = {
   },
   async deleteProfil(req, res) {
     const userId = req.params.id;
+    const anonimousIdentity = Math.round(Math.random() * 1e5);
 
-    const userPhotoProfil = await Photo.findOne({
-      where: { user_id: userId },
-      attributes: ['name'],
-    });
+    const anonimousUser = {
+      firstname: `user_${anonimousIdentity}`,
+      lastname: `user_${anonimousIdentity}`,
+      login: `login${anonimousIdentity}`,
+      age: null,
+      bio: null,
+      email: `emailUser_${anonimousIdentity}`,
+      location_id: null,
+    };
 
-    // Suppression du fichier sur le serveur
-    if (userPhotoProfil) {
-      unlink(`app/photos/${userPhotoProfil?.name}`, (err) => {
-        if (err) throw err;
-        console.log(`app/photos/${userPhotoProfil?.name} was deleted`);
+    try {
+      const userPhotoProfil = await Photo.findOne({
+        where: { user_id: userId },
+        attributes: ['name'],
       });
-      await Photo.destroy({ where: { user_id: userId } });
+
+      // Suppression du fichier sur le serveur
+      if (userPhotoProfil) {
+        unlink(`app/photos/${userPhotoProfil?.name}`, (err) => {
+          if (err) throw err;
+          console.log(`app/photos/${userPhotoProfil?.name} was deleted`);
+        });
+        await Photo.destroy({ where: { user_id: userId } });
+      }
+      // Anonimisation du user en base de données
+      await User.update(anonimousUser, { where: { id: userId } });
+    } catch (err) {
+      console.log(err);
     }
   },
 };
