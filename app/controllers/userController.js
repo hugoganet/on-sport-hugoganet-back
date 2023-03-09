@@ -3,6 +3,7 @@ import { Activity } from '../models/Activity.js';
 import { Sport } from '../models/Sport.js';
 import { Photo } from '../models/Photo.js';
 import { Location } from '../models/Location.js';
+import { unlink } from 'node:fs';
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
 
@@ -130,6 +131,23 @@ const userController = {
     } catch (err) {
       //console.log('Error:', err);
       res.status(500).json({ message: 'An error occurred.' });
+    }
+  },
+  async deleteProfil(req, res) {
+    const userId = req.params.id;
+
+    const userPhotoProfil = await Photo.findOne({
+      where: { user_id: userId },
+      attributes: ['name'],
+    });
+
+    // Suppression du fichier sur le serveur
+    if (userPhotoProfil) {
+      unlink(`app/photos/${userPhotoProfil?.name}`, (err) => {
+        if (err) throw err;
+        console.log(`app/photos/${userPhotoProfil?.name} was deleted`);
+      });
+      await Photo.destroy({ where: { user_id: userId } });
     }
   },
 };
