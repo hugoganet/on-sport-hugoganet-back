@@ -14,7 +14,7 @@ userRouter
     controlUnique.uniqueProfil,
     userController.modifyProfil,
   )
-  .delete(userController.deleteProfil);
+  .delete(controlSyntaxMiddleware.syntaxIdControl, userController.deleteProfil);
 
 userRouter.route('/profil/:id/photo/:name').get(userController.getPhoto);
 export { userRouter };
