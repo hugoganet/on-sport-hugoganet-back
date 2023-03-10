@@ -1,17 +1,21 @@
+// Importation du modèle Comment
 import { Comment } from '../models/Comment.js';
 
 const commentController = {
+  // Récupérer tous les commentaires pour une activité spécifique
   async getCommentsByActivity(req, res) {
     const activityID = req.params.id;
     try {
       const listComments = await Comment.findAll({
-        where: { activity_id: activityID },
+        where: { activity_id: activityID }, // Sélectionner tous les commentaires avec l'ID de l'activité correspondant
       });
       res.json(listComments);
     } catch (error) {
       res.status(404).json({ message: error });
     }
   },
+
+  // Créer un nouveau commentaire pour une activité spécifique
   async postComment(req, res) {
     try {
       await Comment.create({
@@ -28,6 +32,8 @@ const commentController = {
       res.status(404).json({ message: error });
     }
   },
+
+  // Supprimer un commentaire en fonction de son ID
   async deletePostByID(req, res) {
     try {
       const result = await Comment.findAll({ where: { id: req.params.id } });

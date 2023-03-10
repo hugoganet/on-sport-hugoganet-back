@@ -40,8 +40,8 @@ const authController = {
       //   from: `Fred Foo 👻" <${process.env.NODEMAILER_EMAIL}>`, // sender address
       //   to: `${req.body.email}`, // list of receivers
       //   subject: 'Bienvenue sur notre site', // Subject line
-      //   text: `Bonjour, ${firstname} votre inscription est bien validée, rendez-vous sur http://localhost:${process.env.PORT}/signin`,
-      //   html: `<p>Bonjour,<b>${firstname}</b>  votre inscription est bien validée, rendez-vous sur http://localhost:${process.env.PORT}/signin</p>`,
+      //   text: `Bonjour, ${firstname} votre inscription est bien validée, rendez-vous sur <http://localhost>:${process.env.PORT}/signin`,
+      //   html: `<p>Bonjour,<b>${firstname}</b>  votre inscription est bien validée, rendez-vous sur <http://localhost>:${process.env.PORT}/signin</p>`,
       // });
       res.status(200).send();
     } catch (err) {
