@@ -1,31 +1,33 @@
-import { User } from '../models/User.js';
-import { Activity } from '../models/Activity.js';
-import { Sport } from '../models/Sport.js';
-import { Photo } from '../models/Photo.js';
-import { Location } from '../models/Location.js';
-import { unlink } from 'node:fs';
-import bcrypt from 'bcrypt';
-const saltRounds = 10;
+import { User } from '../models/User.js'; //import de la classe User
+import { Activity } from '../models/Activity.js'; //import de la classe Activity
+import { Sport } from '../models/Sport.js'; //import de la classe Sport
+import { Photo } from '../models/Photo.js'; //import de la classe Photo
+import { Location } from '../models/Location.js'; //import de la classe Location
+import { unlink } from 'node:fs'; //import de la méthode unlink du module fs de Node.js
+import bcrypt from 'bcrypt'; //import du module bcrypt, qui permet de chiffrer les mots de passe
+const saltRounds = 10; //nombre de tours de chiffrement pour bcrypt
 
-// Récupérer les informations de l'utilisateur et sa localisation
 const userController = {
+  //méthode asynchrone pour récupérer le profil d'un utilisateur
   async getProfil(req, res) {
-    const userId = req.params.id;
+    const userId = req.params.id; //récupération de l'id de l'utilisateur depuis les paramètres de la requête
     try {
       const user = await User.findOne({
+        //recherche de l'utilisateur correspondant à l'id dans la table Users
         where: { id: userId },
       });
       const location = await Location.findOne({
+        //recherche de la localisation de l'utilisateur dans la table Locations
         where: { id: user.dataValues.location_id },
       });
 
-      // Récupérer les activités de l'utilisateur
+      // récupération des activités de l'utilisateur dans la table Activities et jointure avec les tables Sports et Locations
       const activities = await Activity.findAll({
         where: { user_id: userId },
         include: [{ model: Sport }, { model: Location }],
       });
 
-      // Créer une liste d'activités en format simplifié
+      // création d'une liste simplifiée des activités de l'utilisateur
       const activitiesList = await activities.map((activity) => {
         return {
           id: activity.id,
@@ -43,7 +45,7 @@ const userController = {
         };
       });
 
-      // Récupérer la photo de profil de l'utilisateur et l'ajouter aux données de l'utilisateur
+      // récupération de la photo de profil de l'utilisateur depuis la table Photos et ajout à l'objet utilisateur
       const userPhotoProfil = await Photo.findOne({
         where: { user_id: userId },
       });
@@ -52,7 +54,7 @@ const userController = {
         user.dataValues.photo = userPhotoProfil.dataValues?.name;
       }
 
-      // Ajouter les informations de localisation et les activités à l'objet utilisateur
+      // ajout des informations de localisation et des activités à l'objet utilisateur
       user.dataValues.locationName = location?.name;
       user.dataValues.locationPostcode = location?.postcode;
       user.dataValues.locationDepartment = location?.department;
@@ -67,7 +69,7 @@ const userController = {
         user.photos = profilPhoto;
       }
       //
-      // Supprimer le mot de passe de l'objet utilisateur avant de le renvoyer
+      // suppression du mot de passe de l'objet utilisateur avant de le renvoyer
       delete user.dataValues.password;
       res.status(200).json(user);
     } catch (err) {
@@ -75,6 +77,7 @@ const userController = {
     }
   },
 
+  // méthode asynchrone pour modifier le profil d'un utilisateur
   async modifyProfil(req, res) {
     let jsonAsString;
     if (req.body?.jsonAsString) {
@@ -84,13 +87,13 @@ const userController = {
     const userId = req.params.id;
     let hashPassword;
     if (jsonAsString?.password) {
-      hashPassword = await bcrypt.hash(jsonAsString.password, saltRounds);
+      hashPassword = await bcrypt.hash(jsonAsString.password, saltRounds); //hachage du mot de passe avec bcrypt
       jsonAsString.password = hashPassword;
     }
 
     try {
       await User.update(
-        jsonAsString,
+        jsonAsString, //mise à jour des informations de l'utilisateur
 
         { where: { id: userId } },
       );
@@ -100,7 +103,7 @@ const userController = {
       if (req?.files) {
         // Récupération name photo en BDD
 
-        // Ajout du nom de la photo en BDD en lien avec le user_id
+        // ajout du nom de la photo en BDD en lien avec le user_id
         for (let i = 0; i < req?.files.length; i++) {
           photos[i] = req.files[i].filename;
           await Photo.create({
@@ -116,6 +119,8 @@ const userController = {
       // console.log(err);
     }
   },
+
+  //méthode pour récupérer une photo depuis le serveur
   async getPhoto(req, res) {
     try {
       const fileName = req.params.name;
@@ -133,6 +138,8 @@ const userController = {
       res.status(500).json({ message: 'An error occurred.' });
     }
   },
+
+  //méthode pour supprimer le profil d'un utilisateur
   async deleteProfil(req, res) {
     const userId = req.params.id;
     const anonimousIdentity = Math.round(Math.random() * 1e5);
@@ -153,15 +160,15 @@ const userController = {
         attributes: ['name'],
       });
 
-      // Suppression du fichier sur le serveur
+      // suppression du fichier photo sur le serveur
       if (userPhotoProfil) {
         unlink(`app/photos/${userPhotoProfil?.name}`, (err) => {
           if (err) throw err;
           console.log(`app/photos/${userPhotoProfil?.name} was deleted`);
         });
-        await Photo.destroy({ where: { user_id: userId } });
+        await Photo.destroy({ where: { user_id: userId } }); //suppression de la photo de la table Photos
       }
-      // Anonimisation du user en base de données
+      // anonymisation de l'utilisateur dans la table Users
       await User.update(anonimousUser, { where: { id: userId } });
       res.status(200).json({ info: `User ${userId} rendu inactif` });
     } catch (err) {
