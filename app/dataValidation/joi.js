@@ -1,5 +1,6 @@
 import Joi from 'joi';
 
+// Définition du schéma de validation des données utilisateur
 export const schema = Joi.object().keys({
   firstname: Joi.string().min(2).max(40).required(),
   lastname: Joi.string().min(2).max(40).required(),
@@ -10,5 +11,5 @@ export const schema = Joi.object().keys({
       tlds: { allow: ['com', 'net', 'fr', 'test'] },
     }),
   password: Joi.string().required().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
-  // suppression contrôle validation du mot de passe, géré en code maison
+  // La validation du mot de passe est gérée en code maison
 });
