@@ -15,9 +15,9 @@ const activityController = {
     try {
       const activities = await Activity.findAll({
         include: [
-          { model: Sport },
-          { model: User, attributes: ['firstname'] },
-          { model: Location, attributes: ['name', 'postcode', 'department'] },
+          { model: Sport }, // Inclure les informations sur le sport correspondant à chaque activité
+          { model: User, attributes: ['firstname'] }, // Inclure seulement le prénom de l'utilisateur correspondant à chaque activité
+          { model: Location, attributes: ['name', 'postcode', 'department'] }, // Inclure seulement le nom, le code postal et le département de l'emplacement correspondant à chaque activité
         ],
         attributes: [
           'id',
@@ -53,10 +53,10 @@ const activityController = {
             : null,
         };
       });
-      res.status(200).json(activitiesList);
+      res.status(200).json(activitiesList); // Renvoyer la liste des activités
     } catch (err) {
       console.log(err);
-      res.status(500).json(err);
+      res.status(500).json(err); // Renvoyer une erreur 500 si une erreur se produit lors de la récupération des activités
     }
   },
 
@@ -73,15 +73,15 @@ const activityController = {
       const activity = await Activity.findOne({
         where: { id: activityRequest },
         include: [
-          { model: Sport },
-          { model: Location },
-          { model: User, attributes: ['firstname'] },
+          { model: Sport }, // Inclure les informations sur le sport correspondant à l'activité
+          { model: Location }, // Inclure les informations sur l'emplacement correspondant à l'activité
+          { model: User, attributes: ['firstname'] }, // Inclure seulement le prénom de l'utilisateur correspondant à l'activité
         ],
       });
       const activityDetail = {
         id: activity.id,
         title: activity.title,
-        note: moyenne[0][0]?.activity_note || null,
+        note: moyenne[0][0]?.activity_note || null, // Récupérer la moyenne des notes des commentaires associés à l'activité et la stocker dans la propriété "note" de l'objet "activityDetail"
         description: activity.description,
         family_tag: activity.family_tag,
         photo: activity.photo,
@@ -102,12 +102,12 @@ const activityController = {
       });
 
       if (activityPhoto) {
-        activityDetail.photos = activityPhoto;
+        activityDetail.photos = activityPhoto; // Ajouter les noms des photos associées à l'activité à la propriété "photos" de l'objet "activityDetail"
       }
 
-      res.status(200).json(activityDetail);
+      res.status(200).json(activityDetail); // Renvoyer les détails de l'activité
     } catch (err) {
-      res.status(404).json({ message: 'Activity not found' });
+      res.status(404).json({ message: 'Activity not found' }); // Renvoyer une erreur 404 si l'activité n'est pas trouvée
       console.log(err);
     }
   },
@@ -122,7 +122,7 @@ const activityController = {
     try {
       const activities = await Activity.findAll({
         include: [{ model: Sport }, { model: Location }],
-        where: { '$Sport.name$': sportRequest },
+        where: { '$Sport.name$': sportRequest }, // Récupérer les activités dont le nom du sport correspond à la requête
       });
       const activitiesDetails = activities.map((activity) => {
         return {
@@ -140,9 +140,9 @@ const activityController = {
           locationDepartment: activity.Location?.department,
         };
       });
-      res.json(activitiesDetails);
+      res.json(activitiesDetails); // Renvoyer la liste des activités correspondant au sport demandé
     } catch (err) {
-      res.status(404).json({ message: 'Activities not found' });
+      res.status(404).json({ message: 'Activities not found' }); // Renvoyer une erreur 404 si les activités ne sont pas trouvées
     }
   },
   async createActivity(req, res) {
@@ -168,21 +168,21 @@ const activityController = {
       // Process to add files in BDD and build object photos to response
       if (req?.files) {
         for (let i = 0; i < req?.files.length; i++) {
-          photos[i] = req.files[i].filename;
+          photos[i] = req.files[i].filename; // Ajouter le nom du fichier de la photo à la propriété "photos" de l'objet "photos"
           await Photo.create({
             name: req.files[i].filename,
             activity_id: result.dataValues.id,
-          });
+          }); // Stocker le nom du fichier de la photo dans la base de données
         }
       }
       result.dataValues.photos = photos;
       console.log('PHOTOS : ', photos);
       res.status(201).json({
         message: 'Activity successful created',
-        activity: result,
+        activity: result, // Renvoyer les détails de l'activité créée, y compris les noms des photos associées, sous forme d'objet JSON
       });
     } catch (err) {
-      res.status(404).json({ message: err });
+      res.status(404).json({ message: err }); // Renvoyer une erreur 404 si une erreur se produit lors de la création de l'activité
     }
   },
   async updateActivityByID(req, res) {
@@ -204,15 +204,15 @@ const activityController = {
             );
 
             res.status(200).json({
-              message: 'update successful',
+              message: 'update successful', // Renvoyer un message de mise à jour réussie
             });
           } else {
-            res.status(500).json({ message: 'update failed' });
+            res.status(500).json({ message: 'update failed' }); // Renvoyer une erreur 500 si la mise à jour échoue
           }
         },
       );
     } catch (error) {
-      res.status(404).json({ message: error });
+      res.status(404).json({ message: error }); // Renvoyer une erreur 404 si l'activité n'est pas trouvée
     }
   },
   async deleteActivityByID(req, res) {
@@ -221,14 +221,14 @@ const activityController = {
         async (result) => {
           if (result.length > 0) {
             await Activity.destroy({ where: { id: req.params.id } }),
-              res.status(200).json({ message: 'delete activity successfully' });
+              res.status(200).json({ message: 'delete activity successfully' }); // Renvoyer un message de suppression réussie
           } else {
-            res.status(404).json({ message: 'id activity not found' });
+            res.status(404).json({ message: 'id activity not found' }); // Renvoyer une erreur 404 si l'activité n'est pas trouvée
           }
         },
       );
     } catch (error) {
-      res.status(404).json({ message: error });
+      res.status(404).json({ message: error }); // Renvoyer une erreur 404 si l'activité n'est pas trouvée
     }
   },
   getPhoto(req, res) {
@@ -241,7 +241,7 @@ const activityController = {
       if (err) {
         res.status(500).send({
           message: 'Could not download the file. ' + err,
-        });
+        }); // Renvoyer une erreur 500 si la photo ne peut pas être téléchargée
       }
     });
   },
