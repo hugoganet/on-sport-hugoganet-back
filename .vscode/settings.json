@@ -28,5 +28,9 @@
       "database": "onsport",
       "username": "onsport"
     }
-  ]
+  ],
+  "editor.tokenColorCustomizations": {
+    "comments": "",
+    "textMateRules": []
+  }
 }
