@@ -16,7 +16,7 @@ export const tokenController = {
       { expiresIn: 240 },
     );
     try {
-      return { token: token };
+      return { token: token }; // Renvoie le token généré
     } catch (err) {
       return err;
     }
