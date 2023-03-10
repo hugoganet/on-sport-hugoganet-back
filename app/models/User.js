@@ -2,8 +2,10 @@ import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../dataSource/onSportSource.js';
 import { Location } from './Location.js';
 
+// Définition de la classe User en étendant la classe Model de sequelize
 export class User extends Model {}
 
+// Initialisation de la classe User pour lier l'objet User à la table "user" dans la base de données
 User.init(
   {
     firstname: {
@@ -45,11 +47,13 @@ User.init(
   },
   {
     underscored: true,
-    tableName: 'user',
+    tableName: 'user', // Nom de la table dans la base de données
     sequelize,
-    modelName: 'User',
+    modelName: 'User', // Nom de la classe modèle
     createdAt: false,
     updatedAt: false,
   },
 );
+
+// L'objet User a une relation "hasOne" avec la classe Location, utilisant la clé étrangère "location_id"
 User.hasOne(Location, { foreignKey: 'id' });
