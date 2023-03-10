@@ -5,6 +5,12 @@ import { userController } from '../controllers/userController.js';
 import { uploadFile } from '../middlewares/uploadPhoto.js';
 import { controlUnique } from '../middlewares/controlData.js';
 import { controlSyntaxMiddleware } from '../middlewares/controlSyntaxMiddleware.js';
+import { controlToken } from '../middlewares/jwt.js';
+
+userRouter.get('/profil/:id/photo/:name', userController.getPhoto);
+
+userRouter.use(controlToken.validateToken);
+
 userRouter
   .route('/profil/:id')
   .get(controlSyntaxMiddleware.syntaxIdControl, userController.getProfil)
@@ -16,5 +22,4 @@ userRouter
   )
   .delete(controlSyntaxMiddleware.syntaxIdControl, userController.deleteProfil);
 
-userRouter.route('/profil/:id/photo/:name').get(userController.getPhoto);
 export { userRouter };

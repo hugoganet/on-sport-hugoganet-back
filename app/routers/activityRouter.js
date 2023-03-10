@@ -5,15 +5,16 @@ import { activityController } from '../controllers/activityController.js';
 import { controlSyntaxMiddleware } from '../middlewares/controlSyntaxMiddleware.js';
 import { controlUnique } from '../middlewares/controlData.js';
 import { uploadFile } from '../middlewares/uploadPhoto.js';
+import { controlToken } from '../middlewares/jwt.js';
 
-activityRouter
-  .route('/')
-  .get(activityController.getAllActivities)
-  .post(
-    uploadFile,
-    controlUnique.uniqueActivity,
-    activityController.createActivity,
-  );
+activityRouter.get('/', activityController.getAllActivities);
+activityRouter.use(controlToken.validateToken);
+activityRouter.post(
+  '/',
+  uploadFile,
+  controlUnique.uniqueActivity,
+  activityController.createActivity,
+);
 
 activityRouter
   .route('/:id')

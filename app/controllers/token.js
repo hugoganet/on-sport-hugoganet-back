@@ -13,7 +13,7 @@ export const tokenController = {
         data: { obj },
       },
       process.env.JWT_KEY || 'secret',
-      { expiresIn: 240 },
+      { expiresIn: '2h' },
     );
     try {
       return { token: token };

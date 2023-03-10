@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 export const controlToken = {
   async validateToken(req, res, next) {
     let tokenToCheck = req.headers.authorization;
-
+    console.log(tokenToCheck);
     // uniquement nécessaire pour les tests avec postman
     tokenToCheck = tokenToCheck?.replace('Bearer ', '');
 
