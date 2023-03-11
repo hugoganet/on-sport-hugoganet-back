@@ -8,6 +8,7 @@ import { uploadFile } from '../middlewares/uploadPhoto.js';
 import { controlToken } from '../middlewares/jwt.js';
 
 activityRouter.get('/', activityController.getAllActivities);
+activityRouter.get('/:id/photo/:name', activityController.getPhoto);
 activityRouter.use(controlToken.validateToken);
 activityRouter.post(
   '/',
@@ -21,8 +22,6 @@ activityRouter
   .get(activityController.getActivityByID)
   .put(activityController.updateActivityByID)
   .delete(activityController.deleteActivityByID);
-
-activityRouter.get('/:id/photo/:name', activityController.getPhoto);
 
 activityRouter
   .route('/sport/:name')
