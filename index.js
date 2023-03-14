@@ -35,8 +35,8 @@ app.use(cors(corsOptions));
 app.use(router);
 
 const httpsOptions = {
-  key: fs.readFileSync('./security/nginx-selfsigned.key', 'utf8'),
-  cert: fs.readFileSync('./security/nginx-selfsigned.crt', 'utf8'),
+  key: fs.readFileSync('./security/privkey.pem', 'utf8'),
+  cert: fs.readFileSync('./security/fullchain.pem', 'utf8'),
 };
 http.createServer(app).listen(port);
 https.createServer(httpsOptions, app).listen(portSecure);
