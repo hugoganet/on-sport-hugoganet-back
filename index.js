@@ -7,7 +7,7 @@ import fs from 'fs';
 import { router } from './app/routers/index.js';
 import { sequelize } from './app/dataSource/onSportSource.js';
 import cors from 'cors';
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3100;
 const portSecure = process.env.PORT_SECURE || 443;
 //
 //
@@ -36,7 +36,7 @@ app.use(router);
 
 const httpsOptions = {
   key: fs.readFileSync('./security/privkey.pem', 'utf8'),
-  cert: fs.readFileSync('./security/fullchain.pem', 'utf8'),
+  cert: fs.readFileSync('./security/cert.pem', 'utf8'),
 };
 http.createServer(app).listen(port);
 https.createServer(httpsOptions, app).listen(portSecure);
