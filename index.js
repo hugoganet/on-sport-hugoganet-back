@@ -8,7 +8,6 @@ import http from 'http';
 import fs from 'fs';
 import { router } from './app/routers/index.js';
 import { sequelize } from './app/dataSource/onSportSource.js';
-import cors from 'cors';
 const port = process.env.PORT || 3100;
 const portSecure = process.env.PORT_SECURE || 443;
 //
