@@ -5,8 +5,12 @@ import { userController } from '../controllers/userController.js';
 import { uploadFile } from '../middlewares/uploadPhoto.js';
 import { controlUnique } from '../middlewares/controlData.js';
 import { controlSyntaxMiddleware } from '../middlewares/controlSyntaxMiddleware.js';
+import { controlToken } from '../middlewares/jwt.js';
 
-// Routes relatives aux profils utilisateur
+userRouter.get('/profil/:id/photo/:name', userController.getPhoto);
+
+userRouter.use(controlToken.validateToken);
+
 userRouter
   .route('/profil/:id')
   .get(controlSyntaxMiddleware.syntaxIdControl, userController.getProfil) // Route pour obtenir un profil d'utilisateur

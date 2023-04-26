@@ -2,16 +2,17 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
+const app = express();
+import https from 'https';
+import http from 'http';
+import fs from 'fs';
 import { router } from './app/routers/index.js';
 import { sequelize } from './app/dataSource/onSportSource.js';
-
-// On initialise l'application "express"
-const app = express();
-
-// On définit le port sur lequel écouter
-const port = process.env.PORT || 3000;
-
-// On utilise les middlewares d'express pour gérer les données en entrée
+import cors from 'cors';
+const port = process.env.PORT || 3100;
+const portSecure = process.env.PORT_SECURE || 443;
+//
+//
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -41,7 +42,9 @@ sequelize
 // On utilise les routes définies dans l'application
 app.use(router);
 
-// On lance l'application en écoutant sur le port défini précédemment
-app.listen(port, () => {
-  console.log(`server Express started on port : ${port}`);
-});
+const httpsOptions = {
+  key: fs.readFileSync('./security/privkey.pem', 'utf8'),
+  cert: fs.readFileSync('./security/cert.pem', 'utf8'),
+};
+http.createServer(app).listen(port);
+https.createServer(httpsOptions, app).listen(portSecure);

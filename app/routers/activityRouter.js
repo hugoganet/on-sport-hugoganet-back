@@ -7,6 +7,7 @@ import { activityController } from '../controllers/activityController.js';
 import { controlSyntaxMiddleware } from '../middlewares/controlSyntaxMiddleware.js';
 import { controlUnique } from '../middlewares/controlData.js';
 import { uploadFile } from '../middlewares/uploadPhoto.js';
+import { controlToken } from '../middlewares/jwt.js';
 
 // Route pour la gestion des activités
 activityRouter

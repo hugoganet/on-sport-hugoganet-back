@@ -221,7 +221,7 @@ const activityController = {
         async (result) => {
           if (result.length > 0) {
             await Activity.destroy({ where: { id: req.params.id } }),
-              res.status(200).json({ message: 'delete activity successfully' }); // Renvoyer un message de suppression réussie
+            res.status(200).json({ message: 'delete activity successfully' });
           } else {
             res.status(404).json({ message: 'id activity not found' }); // Renvoyer une erreur 404 si l'activité n'est pas trouvée
           }
