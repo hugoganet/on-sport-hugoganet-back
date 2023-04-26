@@ -36,6 +36,7 @@ User.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    // eslint-disable-next-line no-dupe-keys
     email: {
       type: DataTypes.STRING,
       allowNull: false,

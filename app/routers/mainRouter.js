@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // On importe le module "express" et on crée un objet routeur
 import express from 'express';
 const mainRouter = express.Router();

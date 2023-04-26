@@ -22,8 +22,8 @@ export const controlToken = {
       // si token présent dans le header mais expiré, je renvoie la date d'expiration, sinon j'indique simplement que l'accès est vérouillé.
       err?.expiredAt
         ? res
-            .status(401)
-            .json({ Error: 'acces denied', expiredAt: err?.expiredAt })
+          .status(401)
+          .json({ Error: 'acces denied', expiredAt: err?.expiredAt })
         : res.status(401).json({ Error: 'acces denied' });
     }
   },

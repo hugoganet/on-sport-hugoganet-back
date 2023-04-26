@@ -41,9 +41,17 @@ sequelize
 // On utilise les routes définies dans l'application
 app.use(router);
 
+
 const httpsOptions = {
+  // Lire le contenu du fichier privkey.pem et le stocker en tant que clé privée
   key: fs.readFileSync('./security/privkey.pem', 'utf8'),
+  // Lire le contenu du fichier cert.pem et le stocker en tant que certificat public
   cert: fs.readFileSync('./security/cert.pem', 'utf8'),
 };
+
+// Créer un serveur HTTP avec l'application (app) et l'écouter sur le port spécifié (port)
 http.createServer(app).listen(port);
+
+// Créer un serveur HTTPS sécurisé avec les options HTTPS (httpsOptions) et l'application (app)
+// puis l'écouter sur le port sécurisé spécifié (portSecure)
 https.createServer(httpsOptions, app).listen(portSecure);
